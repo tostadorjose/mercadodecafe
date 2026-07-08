@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buyer Survey – mercadodecafe.com | Peruvian Coffee</title>
+<style>
+  :root {
+    --brown-900: #2C1A0E;
+    --brown-800: #4A2E16;
+    --brown-700: #6B3F1E;
+    --brown-500: #9B6240;
+    --brown-300: #C9956A;
+    --brown-100: #EDD9C8;
+    --brown-50:  #FAF3EC;
+    --cream:     #FDF8F3;
+    --text:      #1E130A;
+    --text-muted:#6B5B4E;
+    --border:    #D9C4B0;
+    --green:     #2D6A4F;
+    --radius:    10px;
+    --shadow:    0 2px 12px rgba(44,26,14,0.09);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--cream); color: var(--text); font-family: 'Georgia', 'Times New Roman', serif; font-size: 16px; line-height: 1.7; }
+
+  /* HEADER */
+  .site-header { background: var(--brown-900); color: #fff; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .75rem; }
+  .site-logo { font-size: 1.05rem; font-weight: bold; letter-spacing: .03em; color: var(--brown-100); text-decoration: none; }
+  .site-logo span { color: var(--brown-300); }
+  .lang-bar { display: flex; gap: 6px; }
+  .lang-btn { background: transparent; border: 1.5px solid rgba(255,255,255,.3); color: rgba(255,255,255,.7); border-radius: 6px; padding: 4px 12px; font-size: 13px; cursor: pointer; font-family: inherit; transition: all .15s; }
+  .lang-btn:hover { border-color: var(--brown-300); color: var(--brown-300); }
+  .lang-btn.active { background: var(--brown-700); border-color: var(--brown-300); color: #fff; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--brown-800) 0%, var(--brown-900) 100%); color: #fff; padding: 3rem 2rem 2.5rem; text-align: center; }
+  .hero-eyebrow { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--brown-300); margin-bottom: .6rem; font-family: 'Helvetica Neue', Arial, sans-serif; }
+  .hero h1 { font-size: clamp(1.5rem, 4vw, 2.3rem); font-weight: normal; line-height: 1.25; color: var(--brown-50); margin-bottom: .6rem; max-width: 680px; margin-left: auto; margin-right: auto; }
+  .hero-flag { font-size: 1.4rem; margin-bottom: .4rem; }
+  .hero-sub { font-size: 14.5px; color: var(--brown-100); max-width: 560px; margin: 0 auto 1.5rem; font-family: 'Helvetica Neue', Arial, sans-serif; }
+  .progress-track { max-width: 420px; margin: 0 auto; height: 4px; background: rgba(255,255,255,.2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--brown-300); width: 0%; transition: width .4s ease; }
+  .progress-label { font-size: 12px; color: var(--brown-300); margin-top: 6px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  /* FORM */
+  .form-container { max-width: 780px; margin: 2.5rem auto 0; padding: 0 1.5rem 2rem; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin: 2.5rem 0 1.25rem; padding-bottom: .5rem; border-bottom: 1.5px solid var(--border); }
+  .section-num { width: 32px; height: 32px; background: var(--brown-800); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; font-family: 'Helvetica Neue', Arial, sans-serif; flex-shrink: 0; }
+  .section-title { font-size: 1.05rem; font-weight: bold; color: var(--brown-800); font-family: 'Helvetica Neue', Arial, sans-serif; letter-spacing: .02em; }
+
+  /* CARDS */
+  .q-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+  .q-label { font-size: 15px; color: var(--text); margin-bottom: .75rem; display: block; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500; line-height: 1.5; }
+  .q-num-badge { display: inline-block; background: var(--brown-100); color: var(--brown-800); font-size: 11px; font-weight: bold; padding: 1px 7px; border-radius: 4px; margin-right: 6px; font-family: 'Helvetica Neue', Arial, sans-serif; vertical-align: middle; }
+  .q-required { color: var(--brown-700); margin-left: 3px; }
+  .q-hint { font-size: 12px; color: var(--text-muted); margin-top: -4px; margin-bottom: 8px; font-family: 'Helvetica Neue', Arial, sans-serif; font-style: italic; }
+
+  /* INPUTS */
+  select, textarea, input[type="text"], input[type="email"], input[type="number"], input[type="tel"] { width: 100%; padding: 9px 13px; border: 1px solid var(--border); border-radius: 7px; font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; color: var(--text); background: var(--brown-50); transition: border-color .15s; appearance: none; }
+  select:focus, textarea:focus, input:focus { outline: none; border-color: var(--brown-500); background: #fff; }
+  textarea { resize: vertical; min-height: 88px; }
+  .country-item { display:flex; align-items:center; gap:10px; padding:7px 14px; cursor:pointer; font-size:13px; font-family:'Helvetica Neue',Arial,sans-serif; color:var(--text); transition:background .1s; }
+  .country-item:hover { background:var(--brown-50); }
+  .country-item .ci-flag { font-size:18px; flex-shrink:0; }
+  .country-item .ci-name { flex:1; }
+  .country-item .ci-dial { color:var(--text-muted); font-size:12px; }
+
+  /* CHECKBOXES */
+  .check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .check-grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 8px; }
+  .check-item { display: flex; align-items: flex-start; gap: 9px; background: var(--brown-50); border: 1px solid var(--border); border-radius: 7px; padding: 9px 11px; cursor: pointer; transition: border-color .15s; font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13.5px; line-height: 1.4; }
+  .check-item:hover { border-color: var(--brown-500); }
+  .check-item input { margin-top: 2px; accent-color: var(--brown-700); flex-shrink: 0; }
+
+  /* LIKERT */
+  .likert-wrap { display: flex; border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+  .likert-wrap label { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 6px; cursor: pointer; border-right: 1px solid var(--border); font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 13px; color: var(--text-muted); background: var(--brown-50); transition: background .15s; text-align: center; gap: 5px; }
+  .likert-wrap label:last-child { border-right: none; }
+  .likert-wrap input[type="radio"] { accent-color: var(--brown-700); }
+  .likert-wrap label:has(input:checked) { background: var(--brown-100); color: var(--brown-800); font-weight: 500; }
+  .likert-endpoints { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-top: 5px; font-family: 'Helvetica Neue', Arial, sans-serif; font-style: italic; }
+
+  /* SUBMIT */
+  .submit-zone { text-align: center; padding: 2rem 0 1rem; }
+  .btn-submit { background: var(--brown-800); color: #fff; border: none; border-radius: 8px; padding: 14px 48px; font-size: 16px; font-family: 'Helvetica Neue', Arial, sans-serif; cursor: pointer; letter-spacing: .03em; transition: background .2s; }
+  .btn-submit:hover { background: var(--brown-700); }
+  .privacy-note { font-size: 12px; color: var(--text-muted); margin-top: 10px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  /* SUCCESS */
+  .success-screen { display: none; text-align: center; padding: 3rem 2rem 2rem; }
+  .success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+  .success-screen h2 { font-size: 1.6rem; color: var(--brown-800); margin-bottom: .5rem; }
+  .success-screen p { color: var(--text-muted); font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 420px; margin: 0 auto 1.5rem; }
+  .btn-new { background: none; border: 1.5px solid var(--brown-700); color: var(--brown-700); border-radius: 8px; padding: 10px 28px; cursor: pointer; font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  /* ADMIN */
+  .admin-toggle { display: none; position: fixed; bottom: 20px; right: 20px; background: var(--brown-900); color: var(--brown-100); border: none; border-radius: 50px; padding: 10px 18px; font-size: 13px; cursor: pointer; box-shadow: 0 4px 16px rgba(44,26,14,.3); font-family: 'Helvetica Neue', Arial, sans-serif; z-index: 100; }
+  .admin-panel { display: none; position: fixed; bottom: 70px; right: 20px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 8px 32px rgba(44,26,14,.2); padding: 1.25rem 1.5rem; width: 320px; z-index: 101; font-family: 'Helvetica Neue', Arial, sans-serif; }
+  .admin-panel h3 { font-size: 14px; color: var(--brown-800); margin-bottom: .75rem; font-weight: 600; }
+  .admin-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  .stat-box { background: var(--brown-50); border: 1px solid var(--border); border-radius: 7px; padding: 10px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: bold; color: var(--brown-800); }
+  .stat-lbl { font-size: 11px; color: var(--text-muted); }
+  .btn-csv { width: 100%; background: var(--brown-700); color: #fff; border: none; border-radius: 7px; padding: 10px; cursor: pointer; font-size: 13px; margin-bottom: 6px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+  .btn-csv:hover { background: var(--brown-800); }
+  .btn-clear { width: 100%; background: none; color: #c0392b; border: 1px solid #c0392b; border-radius: 7px; padding: 8px; cursor: pointer; font-size: 12px; font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  footer { text-align: center; font-size: 12px; color: var(--text-muted); padding: 1.5rem; border-top: 1px solid var(--border); font-family: 'Helvetica Neue', Arial, sans-serif; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1.25rem; }
+    .form-container { margin-top: 1.75rem; padding: 0 1rem 1.25rem; }
+    .success-screen { padding: 2.5rem 1.25rem 1.5rem; }
+    footer { padding: 1.25rem 1rem; }
+    .check-grid, .check-grid-2 { grid-template-columns: 1fr; }
+    .likert-wrap label { font-size: 11px; padding: 8px 3px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="https://www.mercadodecafe.com" class="site-logo">mercado<span>de</span>cafe</a>
+  <div class="lang-bar">
+    <button class="lang-btn" onclick="setLang('es')">ES</button>
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('it')">IT</button>
+    <button class="lang-btn" onclick="setLang('de')">DE</button>
+  </div>
+</header>
+
+<div class="hero">
+  <p class="hero-eyebrow" id="h-eyebrow">Peruvian Coffee · Buyer Survey 2026</p>
+  <h1 id="h-title">Help us serve you better</h1>
+  <p class="hero-sub" id="h-sub">We are mercadodecafe.com, exporters of high-quality Peruvian coffee. This 18-question survey helps us understand your needs and offer you exactly what you are looking for.</p>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <p class="progress-label" id="progress-label">0 / 18 questions</p>
+</div>
+
+<div class="form-container" id="form-container">
+<form id="survey-form" novalidate>
+
+<!-- ══════════ S1: PERFIL ══════════ -->
+<div class="section-header">
+  <div class="section-num">1</div>
+  <div class="section-title" id="s1-title">Perfil de su negocio</div>
+</div>
+
+<!-- Q1 -->
+<div class="q-card">
+  <label class="q-label" for="q1"><span class="q-num-badge">01</span><span id="q1-lbl">¿Cuál es el giro principal de su empresa?</span><span class="q-required">*</span></label>
+  <select id="q1" name="q1" required>
+    <option value="" disabled selected id="q1-ph">– Seleccione –</option>
+    <option value="roaster_specialty" id="q1-a1">Tostador / Roaster (specialty / premium)</option>
+    <option value="roaster_mass" id="q1-a2">Tostador / Roaster (consumo masivo)</option>
+    <option value="cafe_bar" id="q1-a3">Cafetería / Coffee bar independiente</option>
+    <option value="cafe_chain" id="q1-a4">Cadena de cafeterías</option>
+    <option value="horeca" id="q1-a5">HORECA (hotel, restaurante, catering)</option>
+    <option value="importer" id="q1-a6">Importador / Distribuidor de café verde</option>
+    <option value="retailer" id="q1-a7">Minorista / Tienda especializada</option>
+    <option value="supermarket" id="q1-a8">Supermercado / Canal masivo</option>
+    <option value="other" id="q1-a9">Otro</option>
+  </select>
+</div>
+
+<!-- Q2 -->
+<div class="q-card">
+  <label class="q-label" for="q2"><span class="q-num-badge">02</span><span id="q2-lbl">¿En qué país / mercado opera principalmente?</span><span class="q-required">*</span></label>
+  <select id="q2" name="q2" required>
+    <option value="" disabled selected id="q2-ph">– Seleccione –</option>
+    <option value="de" id="q2-a1">Alemania</option>
+    <option value="it" id="q2-a2">Italia</option>
+    <option value="fr" id="q2-a3">Francia</option>
+    <option value="es" id="q2-a4">España</option>
+    <option value="uk" id="q2-a5">Reino Unido</option>
+    <option value="nl" id="q2-a6">Países Bajos</option>
+    <option value="be" id="q2-a7">Bélgica</option>
+    <option value="ch" id="q2-a8">Suiza</option>
+    <option value="at" id="q2-a9">Austria</option>
+    <option value="us" id="q2-a10">Estados Unidos</option>
+    <option value="ca" id="q2-a11">Canadá</option>
+    <option value="jp" id="q2-a12">Japón</option>
+    <option value="kr" id="q2-a13">Corea del Sur</option>
+    <option value="cn" id="q2-a14">China</option>
+    <option value="au" id="q2-a15">Australia</option>
+    <option value="other_mkt" id="q2-a16">Otro</option>
+  </select>
+</div>
+
+<!-- Q3 -->
+<div class="q-card">
+  <label class="q-label" for="q3"><span class="q-num-badge">03</span><span id="q3-lbl">¿Cuántos años lleva comprando café verde de importación?</span></label>
+  <select id="q3" name="q3">
+    <option value="" disabled selected id="q3-ph">– Seleccione –</option>
+    <option value="lt2" id="q3-a1">Menos de 2 años</option>
+    <option value="2-5" id="q3-a2">2 – 5 años</option>
+    <option value="5-10" id="q3-a3">5 – 10 años</option>
+    <option value="gt10" id="q3-a4">Más de 10 años</option>
+    <option value="exploring" id="q3-a5">Aún estoy explorando proveedores</option>
+  </select>
+</div>
+
+<!-- ══════════ S2: COMPRAS ACTUALES ══════════ -->
+<div class="section-header">
+  <div class="section-num">2</div>
+  <div class="section-title" id="s2-title">Hábitos y volúmenes de compra</div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card">
+  <label class="q-label" for="q4"><span class="q-num-badge">04</span><span id="q4-lbl">¿Qué volumen de café verde compra aproximadamente por año?</span><span class="q-required">*</span></label>
+  <select id="q4" name="q4" required>
+    <option value="" disabled selected id="q4-ph">– Seleccione rango –</option>
+    <option value="lt1" id="q4-a1">Menos de 1 tonelada</option>
+    <option value="1-5" id="q4-a2">1 – 5 toneladas</option>
+    <option value="5-20" id="q4-a3">5 – 20 toneladas</option>
+    <option value="20-100" id="q4-a4">20 – 100 toneladas</option>
+    <option value="100-500" id="q4-a5">100 – 500 toneladas</option>
+    <option value="gt500" id="q4-a6">Más de 500 toneladas</option>
+  </select>
+</div>
+
+<!-- Q5 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">05</span><span id="q5-lbl">¿Con qué frecuencia realiza pedidos de café verde?</span></label>
+  <div class="check-grid" id="q5-grid">
+    <label class="check-item"><input type="radio" name="q5" value="weekly"><span id="q5-c1">Semanalmente</span></label>
+    <label class="check-item"><input type="radio" name="q5" value="monthly"><span id="q5-c2">Mensualmente</span></label>
+    <label class="check-item"><input type="radio" name="q5" value="quarterly"><span id="q5-c3">Trimestralmente</span></label>
+    <label class="check-item"><input type="radio" name="q5" value="biannual"><span id="q5-c4">Dos veces al año</span></label>
+    <label class="check-item"><input type="radio" name="q5" value="annual"><span id="q5-c5">Una vez al año (cosecha)</span></label>
+    <label class="check-item"><input type="radio" name="q5" value="spot"><span id="q5-c6">Compras spot / sin regularidad</span></label>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">06</span><span id="q6-lbl">¿De qué orígenes compra café actualmente? (selección múltiple)</span></label>
+  <div class="check-grid-2" id="q6-grid">
+    <label class="check-item"><input type="checkbox" name="q6" value="etiopia"><span id="q6-c1">Etiopía</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="colombia"><span id="q6-c2">Colombia</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="brasil"><span id="q6-c3">Brasil</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="guatemala"><span id="q6-c4">Guatemala</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="kenya"><span id="q6-c5">Kenia</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="costa_rica"><span id="q6-c6">Costa Rica</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="peru"><span id="q6-c7">Perú</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="vietnam"><span id="q6-c8">Vietnam</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="honduras"><span id="q6-c9">Honduras</span></label>
+    <label class="check-item"><input type="checkbox" name="q6" value="otros_ori"><span id="q6-c10">Otros orígenes</span></label>
+  </div>
+</div>
+
+<!-- ══════════ S3: CAFÉ PERUANO ══════════ -->
+<div class="section-header">
+  <div class="section-num">3</div>
+  <div class="section-title" id="s3-title">Conocimiento y percepción del café peruano</div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">07</span><span id="q7-lbl">¿Ha comprado o probado café peruano anteriormente?</span></label>
+  <div class="check-grid" id="q7-grid">
+    <label class="check-item"><input type="radio" name="q7" value="si_compra_regular"><span id="q7-c1">Sí, lo compro regularmente</span></label>
+    <label class="check-item"><input type="radio" name="q7" value="si_ocasional"><span id="q7-c2">Sí, alguna vez de forma ocasional</span></label>
+    <label class="check-item"><input type="radio" name="q7" value="probado_no_compra"><span id="q7-c3">Lo he probado pero no comprado</span></label>
+    <label class="check-item"><input type="radio" name="q7" value="no_pero_interes"><span id="q7-c4">No, pero me interesa conocerlo</span></label>
+    <label class="check-item"><input type="radio" name="q7" value="no_desconocia"><span id="q7-c5">No, no tenía referencias</span></label>
+  </div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">08</span><span id="q8-lbl">¿Qué aspectos del café peruano le generan mayor interés? (selección múltiple)</span></label>
+  <div class="check-grid-2" id="q8-grid">
+    <label class="check-item"><input type="checkbox" name="q8" value="specialty_scores"><span id="q8-c1">Puntuaciones specialty (SCA 84+)</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="organico"><span id="q8-c2">Producción orgánica certificada</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="fairtrade"><span id="q8-c3">Comercio justo / Fairtrade</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="origen_unico"><span id="q8-c4">Cafés de origen único / microlotes</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="precio"><span id="q8-c5">Precio competitivo vs otros orígenes</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="biodiversidad"><span id="q8-c6">Biodiversidad de zonas (Cajamarca, Junín, Puno…)</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="altitude"><span id="q8-c7">Altitud / café de altura</span></label>
+    <label class="check-item"><input type="checkbox" name="q8" value="novedad"><span id="q8-c8">Novedad de origen para mi cartera</span></label>
+  </div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">09</span><span id="q9-lbl">¿Cuál es su percepción actual de la calidad del café peruano comparado con otros orígenes latinoamericanos?</span></label>
+  <div class="likert-wrap">
+    <label><input type="radio" name="q9" value="1"><span>1</span></label>
+    <label><input type="radio" name="q9" value="2"><span>2</span></label>
+    <label><input type="radio" name="q9" value="3"><span>3</span></label>
+    <label><input type="radio" name="q9" value="4"><span>4</span></label>
+    <label><input type="radio" name="q9" value="5"><span>5</span></label>
+  </div>
+  <div class="likert-endpoints">
+    <span id="q9-lo">Inferior / no lo conozco</span>
+    <span id="q9-hi">Superior / excelente reputación</span>
+  </div>
+</div>
+
+<!-- ══════════ S4: CRITERIOS DE COMPRA ══════════ -->
+<div class="section-header">
+  <div class="section-num">4</div>
+  <div class="section-title" id="s4-title">Criterios de decisión de compra</div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">10</span><span id="q10-lbl">¿Qué factores son determinantes al elegir un nuevo proveedor de café verde? (selección múltiple)</span></label>
+  <div class="check-grid-2" id="q10-grid">
+    <label class="check-item"><input type="checkbox" name="q10" value="precio_competitivo"><span id="q10-c1">Precio competitivo y estable</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="calidad_consistente"><span id="q10-c2">Consistencia de calidad lote a lote</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="muestras_previas"><span id="q10-c3">Muestras previas disponibles</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="certificaciones"><span id="q10-c4">Certificaciones (Organic, FT, RA)</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="trazabilidad"><span id="q10-c5">Trazabilidad completa hasta finca</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="flexibilidad_vol"><span id="q10-c6">Flexibilidad de volumen por pedido</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="logistica"><span id="q10-c7">Logística confiable y plazos cumplidos</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="comunicacion"><span id="q10-c8">Comunicación directa con el exportador</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="proceso"><span id="q10-c9">Variedad de procesos (washed, natural, honey)</span></label>
+    <label class="check-item"><input type="checkbox" name="q10" value="historia"><span id="q10-c10">Historia / storytelling del origen</span></label>
+  </div>
+</div>
+
+<!-- Q11 -->
+<div class="q-card">
+  <label class="q-label" for="q11"><span class="q-num-badge">11</span><span id="q11-lbl">What is the maximum price you would be willing to pay for an 85+ SCA score Peruvian specialty coffee? (USD / lb)</span></label>
+  <p class="q-hint" id="q11-hint">Reference: current specialty market Colombia/Ethiopia ranges $3.50–$5.50/lb</p>
+  <select id="q11" name="q11">
+    <option value="" disabled selected id="q11-ph">– Select range –</option>
+    <option value="lt3" id="q11-a1">Menos de $3.00 / lb</option>
+    <option value="3-3.5" id="q11-a2">$3.00 – $3.50 / lb</option>
+    <option value="3.5-4" id="q11-a3">$3.50 – $4.00 / lb</option>
+    <option value="4-4.5" id="q11-a4">$4.00 – $4.50 / lb</option>
+    <option value="4.5-5.5" id="q11-a5">$4.50 – $5.50 / lb</option>
+    <option value="gt5.5" id="q11-a6">Más de $5.50 / lb</option>
+    <option value="depends" id="q11-a7">Depende de la muestra / perfil</option>
+  </select>
+  <div style="margin-top:14px">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:7px;font-family:'Helvetica Neue',Arial,sans-serif" id="q11-basis-lbl">Is that price on a FOB or DDP basis?</p>
+    <div class="check-grid" id="q11-basis-grid">
+      <label class="check-item"><input type="radio" name="q11_basis" value="fob"><span id="q11-basis-1">FOB (Free On Board)</span></label>
+      <label class="check-item"><input type="radio" name="q11_basis" value="ddp"><span id="q11-basis-2">DDP (Delivered Duty Paid)</span></label>
+      <label class="check-item"><input type="radio" name="q11_basis" value="either"><span id="q11-basis-3">Either / depends</span></label>
+    </div>
+  </div>
+</div>
+
+<!-- Q12 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">12</span><span id="q12-lbl">¿Cuál es el volumen mínimo de pedido con el que trabaja cómodamente?</span></label>
+  <div class="check-grid" id="q12-grid">
+    <label class="check-item"><input type="radio" name="q12" value="1saco"><span id="q12-c1">1 saco (60 kg) – microlote</span></label>
+    <label class="check-item"><input type="radio" name="q12" value="5sacos"><span id="q12-c2">5–10 sacos (300–600 kg)</span></label>
+    <label class="check-item"><input type="radio" name="q12" value="1ton"><span id="q12-c3">1 tonelada (±17 sacos)</span></label>
+    <label class="check-item"><input type="radio" name="q12" value="5ton"><span id="q12-c4">5 toneladas (±84 sacos)</span></label>
+    <label class="check-item"><input type="radio" name="q12" value="container"><span id="q12-c5">Contenedor completo (17–20 t)</span></label>
+    <label class="check-item"><input type="radio" name="q12" value="multicontainer"><span id="q12-c6">Multicontenedor (+20 t)</span></label>
+  </div>
+</div>
+
+<!-- ══════════ S5: LOGÍSTICA Y OPERACIONES ══════════ -->
+<div class="section-header">
+  <div class="section-num">5</div>
+  <div class="section-title" id="s5-title">Logística y operaciones de importación</div>
+</div>
+
+<!-- Q13 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">13</span><span id="q13-lbl">¿Qué incoterm prefiere para sus importaciones?</span></label>
+  <div class="check-grid" id="q13-grid">
+    <label class="check-item"><input type="radio" name="q13" value="fob"><span>FOB (Free On Board)</span></label>
+    <label class="check-item"><input type="radio" name="q13" value="cfr"><span>CFR (Cost & Freight)</span></label>
+    <label class="check-item"><input type="radio" name="q13" value="cif"><span>CIF (Cost, Insurance & Freight)</span></label>
+    <label class="check-item"><input type="radio" name="q13" value="dap"><span>DAP / DDP (entrega en destino)</span></label>
+    <label class="check-item"><input type="radio" name="q13" value="flexible"><span id="q13-c5">Flexible / negociable</span></label>
+  </div>
+</div>
+
+<!-- Q14 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">14</span><span id="q14-lbl">¿Cuál es su principal desafío actual al importar café verde de Latinoamérica? (selección múltiple)</span></label>
+  <div class="check-grid-2" id="q14-grid">
+    <label class="check-item"><input type="checkbox" name="q14" value="precio_volatil"><span id="q14-c1">Volatilidad del precio (C-market)</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="calidad_irregular"><span id="q14-c2">Inconsistencia de calidad entre lotes</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="plazos_entrega"><span id="q14-c3">Plazos de entrega impredecibles</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="documentacion"><span id="q14-c4">Documentación y aduanas complejas</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="eudr"><span id="q14-c5">Cumplimiento EUDR / trazabilidad</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="comunicacion_proveedor"><span id="q14-c6">Comunicación difícil con el exportador</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="min_order"><span id="q14-c7">Volúmenes mínimos muy altos</span></label>
+    <label class="check-item"><input type="checkbox" name="q14" value="flete"><span id="q14-c8">Costos de flete elevados</span></label>
+  </div>
+</div>
+
+<!-- Q15 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">15</span><span id="q15-lbl">¿Cuánto tiempo antes de necesitar el café planifica y realiza el pedido?</span></label>
+  <select id="q15" name="q15">
+    <option value="" disabled selected id="q15-ph">– Seleccione –</option>
+    <option value="lt4w" id="q15-a1">Menos de 4 semanas de anticipación</option>
+    <option value="4-8w" id="q15-a2">4 – 8 semanas</option>
+    <option value="2-4m" id="q15-a3">2 – 4 meses</option>
+    <option value="4-6m" id="q15-a4">4 – 6 meses</option>
+    <option value="gt6m" id="q15-a5">Más de 6 meses (forward contracts)</option>
+  </select>
+</div>
+
+<!-- ══════════ S6: RELACIÓN COMERCIAL ══════════ -->
+<div class="section-header">
+  <div class="section-num">6</div>
+  <div class="section-title" id="s6-title">Relación comercial con mercadodecafe.com</div>
+</div>
+
+<!-- Q16 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">16</span><span id="q16-lbl">¿Qué servicios adicionales valora más al trabajar con un exportador de café? (selección múltiple)</span></label>
+  <div class="check-grid-2" id="q16-grid">
+    <label class="check-item"><input type="checkbox" name="q16" value="muestras_gratuitas"><span id="q16-c1">Muestras gratuitas antes de comprar</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="informes_cosecha"><span id="q16-c2">Informes de cosecha y actualizaciones</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="cupping_virtual"><span id="q16-c3">Cuppings virtuales con el exportador</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="visita_finca"><span id="q16-c4">Visitas a finca / origin trip</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="contenido_marketing"><span id="q16-c5">Materiales de marketing del origen</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="financiamiento"><span id="q16-c6">Opciones de pago flexibles / financiamiento</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="tracking"><span id="q16-c7">Tracking en tiempo real del envío</span></label>
+    <label class="check-item"><input type="checkbox" name="q16" value="blends"><span id="q16-c8">Desarrollo de blends personalizados</span></label>
+  </div>
+</div>
+
+<!-- Q17 -->
+<div class="q-card">
+  <label class="q-label"><span class="q-num-badge">17</span><span id="q17-lbl">¿Con qué probabilidad incorporaría café peruano de mercadodecafe.com a su cartera en los próximos 12 meses?</span></label>
+  <div class="likert-wrap">
+    <label><input type="radio" name="q17" value="1"><span>1</span></label>
+    <label><input type="radio" name="q17" value="2"><span>2</span></label>
+    <label><input type="radio" name="q17" value="3"><span>3</span></label>
+    <label><input type="radio" name="q17" value="4"><span>4</span></label>
+    <label><input type="radio" name="q17" value="5"><span>5</span></label>
+  </div>
+  <div class="likert-endpoints">
+    <span id="q17-lo">Muy poco probable</span>
+    <span id="q17-hi">Definitivamente sí</span>
+  </div>
+</div>
+
+<!-- Q18 -->
+<div class="q-card">
+  <label class="q-label" for="q18-name"><span class="q-num-badge">18</span><span id="q18-lbl">¿Le gustaría recibir muestras gratuitas y una propuesta comercial personalizada?</span></label>
+  <select id="q18" name="q18" style="margin-bottom:12px">
+    <option value="" disabled selected id="q18-ph">– Seleccione –</option>
+    <option value="si_ahora" id="q18-a1">Sí, estoy listo/a para recibir muestras ahora</option>
+    <option value="si_proximo" id="q18-a2">Sí, en los próximos 3 – 6 meses</option>
+    <option value="info_primero" id="q18-a3">Primero quisiera más información del catálogo</option>
+    <option value="no" id="q18-a4">No por el momento</option>
+  </select>
+  <div style="display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px">
+    <div>
+      <p style="font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;font-family:'Helvetica Neue',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em" id="q18-lbl-name">Nombre completo</p>
+      <input type="text" id="q18-name" name="q18_name" placeholder="Ej: Hans Müller">
+    </div>
+    <div>
+      <p style="font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;font-family:'Helvetica Neue',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em" id="q18-lbl-company">Empresa</p>
+      <input type="text" id="q18-company" name="q18_company" placeholder="Ej: Rösterei Müller GmbH">
+    </div>
+    <div style="position:relative">
+      <p style="font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;font-family:'Helvetica Neue',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em" id="q18-lbl-phone">Teléfono / WhatsApp</p>
+      <div style="display:flex;gap:0;border:1px solid var(--border);border-radius:7px;overflow:visible;background:var(--brown-50)">
+        <button type="button" id="phone-flag-btn" onclick="toggleCountryDrop()" style="display:flex;align-items:center;gap:5px;padding:0 10px;background:var(--brown-100);border:none;border-right:1px solid var(--border);cursor:pointer;white-space:nowrap;flex-shrink:0;height:40px;border-radius:7px 0 0 7px">
+          <span id="phone-flag-emoji" style="font-size:18px">🌐</span>
+          <span id="phone-dial-code" style="font-size:12px;font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text-muted);font-weight:500">+__</span>
+          <span style="font-size:10px;color:var(--text-muted)">▾</span>
+        </button>
+        <input type="tel" id="q18-phone-num" name="q18_phone_num" placeholder="89 123 456" oninput="updateFullPhone()" style="border:none;background:transparent;flex:1;min-width:0;padding:9px 10px;font-size:14px;font-family:'Helvetica Neue',Arial,sans-serif;color:var(--text);border-radius:0 7px 7px 0">
+        <input type="hidden" id="q18-phone" name="q18_phone" value="">
+      </div>
+      <div id="country-drop" style="display:none;position:absolute;z-index:500;background:#fff;border:1px solid var(--border);border-radius:7px;max-height:220px;overflow-y:auto;width:280px;box-shadow:0 4px 20px rgba(44,26,14,.18);margin-top:2px;top:100%;left:0">
+        <div style="padding:6px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#fff">
+          <input type="text" id="country-search" placeholder="Search country…" oninput="filterCountries(this.value)" style="width:100%;border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:13px;background:var(--brown-50)">
+        </div>
+        <div id="country-list" style="padding:4px 0"></div>
+      </div>
+    </div>
+    <div>
+      <p style="font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;font-family:'Helvetica Neue',Arial,sans-serif;text-transform:uppercase;letter-spacing:.06em" id="q18-lbl-email">Email de contacto</p>
+      <input type="email" id="q18-email" name="q18_email" placeholder="Ej: hans@empresa.com">
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--text-muted);margin-top:8px;font-family:'Helvetica Neue',Arial,sans-serif;font-style:italic" id="q18-fields-note">Todos los campos son opcionales. Solo se usarán para enviarle la propuesta comercial.</p>
+</div>
+
+<div class="submit-zone">
+  <button type="submit" class="btn-submit" id="btn-submit">Enviar respuestas →</button>
+  <p class="privacy-note" id="privacy-note">Sus datos son confidenciales y se utilizarán exclusivamente para contactarle con nuestra propuesta de café peruano.</p>
+</div>
+</form>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="success-screen">
+  <div class="success-icon">☕</div>
+  <h2 id="suc-title">¡Gracias por su tiempo!</h2>
+  <p id="suc-msg">Hemos recibido sus respuestas. El equipo de mercadodecafe.com se pondrá en contacto en menos de 48 h con información personalizada y, si lo solicitó, con el envío de muestras.</p>
+  <button class="btn-new" onclick="resetForm()" id="suc-btn">Enviar otra respuesta</button>
+</div>
+</div>
+
+<!-- ADMIN -->
+<button class="admin-toggle" onclick="toggleAdmin()" id="admin-toggle-btn">📊 Admin</button>
+<div class="admin-panel" id="admin-panel">
+  <h3 id="adm-title">📊 Panel de respuestas</h3>
+  <div class="admin-stats">
+    <div class="stat-box"><div class="stat-num" id="stat-total">0</div><div class="stat-lbl" id="stat-lbl-total">Respuestas totales</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-today">0</div><div class="stat-lbl" id="stat-lbl-today">Hoy</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-samples">0</div><div class="stat-lbl" id="stat-lbl-samples">Solicitan muestras</div></div>
+    <div class="stat-box"><div class="stat-num" id="stat-leads">0</div><div class="stat-lbl" id="stat-lbl-leads">Dejaron email</div></div>
+  </div>
+  <button class="btn-csv" onclick="exportCSV()" id="btn-csv">⬇ Exportar CSV completo</button>
+  <button class="btn-csv" onclick="exportLeads()" id="btn-leads" style="background:var(--green)">⬇ Exportar sólo leads (con email)</button>
+  <button class="btn-csv" onclick="exportJSON()" id="btn-json" style="background:var(--brown-500)">⬇ Exportar JSON</button>
+  <button class="btn-clear" onclick="clearData()" id="btn-clear">🗑 Borrar todos los datos</button>
+</div>
+
+<footer>&copy; <span id="adm-trigger" style="cursor:default">2026</span> <a href="https://www.mercadodecafe.com" style="color:var(--brown-700)">mercadodecafe.com</a> · Exportadores de café peruano de especialidad</footer>
+
+<script>
+/* ═══════════════════════════════════════
+   TRANSLATIONS
+═══════════════════════════════════════ */
+const T = {
+  es: {
+    eyebrow:"Peruvian Coffee · Buyer Survey 2026",
+    title:"Ayúdenos a servirle mejor",
+    sub:"Somos mercadodecafe.com, exportadores de café peruano de alta calidad. Esta encuesta de 18 preguntas nos ayuda a entender sus necesidades y ofrecerle exactamente lo que busca.",
+    progress:(n,t)=>`${n} / ${t} preguntas`,
+    s1:"Perfil de su negocio", s2:"Hábitos y volúmenes de compra",
+    s3:"Conocimiento y percepción del café peruano",
+    s4:"Criterios de decisión de compra",
+    s5:"Logística y operaciones de importación",
+    s6:"Relación comercial con mercadodecafe.com",
+    q1:"¿Cuál es el giro principal de su empresa?", q1ph:"– Seleccione –",
+    q1a:["Tostador / Roaster (specialty / premium)","Tostador / Roaster (consumo masivo)","Cafetería / Coffee bar independiente","Cadena de cafeterías","HORECA (hotel, restaurante, catering)","Importador / Distribuidor de café verde","Minorista / Tienda especializada","Supermercado / Canal masivo","Otro"],
+    q2:"¿En qué país / mercado opera principalmente?", q2ph:"– Seleccione –",
+    q2a:["Alemania","Italia","Francia","España","Reino Unido","Países Bajos","Bélgica","Suiza","Austria","Estados Unidos","Canadá","Japón","Corea del Sur","China","Australia","Otro"],
+    q3:"¿Cuántos años lleva comprando café verde de importación?", q3ph:"– Seleccione –",
+    q3a:["Menos de 2 años","2 – 5 años","5 – 10 años","Más de 10 años","Aún estoy explorando proveedores"],
+    q4:"¿Qué volumen de café verde compra aproximadamente por año?", q4ph:"– Seleccione rango –",
+    q4a:["Menos de 1 tonelada","1 – 5 toneladas","5 – 20 toneladas","20 – 100 toneladas","100 – 500 toneladas","Más de 500 toneladas"],
+    q5:"¿Con qué frecuencia realiza pedidos de café verde?",
+    q5c:["Semanalmente","Mensualmente","Trimestralmente","Dos veces al año","Una vez al año (cosecha)","Compras spot / sin regularidad"],
+    q6:"¿De qué orígenes compra café actualmente? (selección múltiple)",
+    q6c:["Etiopía","Colombia","Brasil","Guatemala","Kenia","Costa Rica","Perú","Vietnam","Honduras","Otros orígenes"],
+    q7:"¿Ha comprado o probado café peruano anteriormente?",
+    q7c:["Sí, lo compro regularmente","Sí, alguna vez de forma ocasional","Lo he probado pero no comprado","No, pero me interesa conocerlo","No, no tenía referencias"],
+    q8:"¿Qué aspectos del café peruano le generan mayor interés? (selección múltiple)",
+    q8c:["Puntuaciones specialty (SCA 84+)","Producción orgánica certificada","Comercio justo / Fairtrade","Cafés de origen único / microlotes","Precio competitivo vs otros orígenes","Biodiversidad de zonas (Cajamarca, Junín, Puno…)","Altitud / café de altura","Novedad de origen para mi cartera"],
+    q9:"¿Cuál es su percepción actual de la calidad del café peruano comparado con otros orígenes latinoamericanos?",
+    q9lo:"Inferior / no lo conozco", q9hi:"Superior / excelente reputación",
+    q10:"¿Qué factores son determinantes al elegir un nuevo proveedor de café verde? (selección múltiple)",
+    q10c:["Precio competitivo y estable","Consistencia de calidad lote a lote","Muestras previas disponibles","Certificaciones (Organic, FT, RA)","Trazabilidad completa hasta finca","Flexibilidad de volumen por pedido","Logística confiable y plazos cumplidos","Comunicación directa con el exportador","Variedad de procesos (washed, natural, honey)","Historia / storytelling del origen"],
+    q11:"¿Cuál es el precio máximo que estaría dispuesto a pagar por un café specialty peruano de 85+ puntos SCA? (USD / lb)",
+    q11hint:"Referencia: el mercado specialty actual de Colombia/Etiopía oscila entre $3.50–$5.50/lb",
+    q11basis:"¿Ese precio es sobre base FOB o DDP?",
+    q11basis_opts:["FOB (puesto a bordo en origen)","DDP (entregado en destino, derechos pagados)","Indistinto / depende"],
+    country_search:"Buscar país…",
+    q11ph:"– Seleccione rango –",
+    q11a:["Menos de $3.00 / lb","$3.00 – $3.50 / lb","$3.50 – $4.00 / lb","$4.00 – $4.50 / lb","$4.50 – $5.50 / lb","Más de $5.50 / lb","Depende de la muestra / perfil"],
+    q12:"¿Cuál es el volumen mínimo de pedido con el que trabaja cómodamente?",
+    q12c:["1 saco (60 kg) – microlote","5–10 sacos (300–600 kg)","1 tonelada (±17 sacos)","5 toneladas (±84 sacos)","Contenedor completo (17–20 t)","Multicontenedor (+20 t)"],
+    q13:"¿Qué incoterm prefiere para sus importaciones?",
+    q13c5:"Flexible / negociable",
+    q14:"¿Cuál es su principal desafío actual al importar café verde de Latinoamérica? (selección múltiple)",
+    q14c:["Volatilidad del precio (C-market)","Inconsistencia de calidad entre lotes","Plazos de entrega impredecibles","Documentación y aduanas complejas","Cumplimiento EUDR / trazabilidad","Comunicación difícil con el exportador","Volúmenes mínimos muy altos","Costos de flete elevados"],
+    q15:"¿Cuánto tiempo antes de necesitar el café planifica y realiza el pedido?", q15ph:"– Seleccione –",
+    q15a:["Menos de 4 semanas de anticipación","4 – 8 semanas","2 – 4 meses","4 – 6 meses","Más de 6 meses (forward contracts)"],
+    q16:"¿Qué servicios adicionales valora más al trabajar con un exportador de café? (selección múltiple)",
+    q16c:["Muestras gratuitas antes de comprar","Informes de cosecha y actualizaciones","Cuppings virtuales con el exportador","Visitas a finca / origin trip","Materiales de marketing del origen","Opciones de pago flexibles / financiamiento","Tracking en tiempo real del envío","Desarrollo de blends personalizados"],
+    q17:"¿Con qué probabilidad incorporaría café peruano de mercadodecafe.com a su cartera en los próximos 12 meses?",
+    q17lo:"Muy poco probable", q17hi:"Definitivamente sí",
+    q18:"¿Le gustaría recibir muestras gratuitas y una propuesta comercial personalizada?", q18ph:"– Seleccione –",
+    q18a:["Sí, estoy listo/a para recibir muestras ahora","Sí, en los próximos 3 – 6 meses","Primero quisiera más información del catálogo","No por el momento"],
+    q18name:"Nombre completo", q18ep:"Email de contacto", q18co:"Empresa",
+    q18lbl_name:"Nombre completo", q18lbl_company:"Empresa", q18lbl_phone:"Teléfono / WhatsApp", q18lbl_email:"Email de contacto",
+    q18note:"Todos los campos son opcionales. Solo se usarán para enviarle la propuesta comercial.",
+    q18ph_name:"Ej: Hans Müller", q18ph_company:"Ej: Rösterei Müller GmbH", q18ph_phone:"Ej: +49 89 123456", q18ph_email:"Ej: hans@empresa.com",
+    submit:"Enviar respuestas →",
+    privacy:"Sus datos son confidenciales y se utilizarán exclusivamente para contactarle con nuestra propuesta de café peruano.",
+    suc_title:"¡Gracias por su tiempo!", suc_btn:"Enviar otra respuesta",
+    suc_msg:"Hemos recibido sus respuestas. El equipo de mercadodecafe.com se pondrá en contacto en menos de 48 h con información personalizada y, si lo solicitó, con el envío de muestras.",
+    adm:"📊 Panel de respuestas", adm_total:"Respuestas totales", adm_today:"Hoy",
+    adm_samples:"Solicitan muestras", adm_leads:"Dejaron email",
+    csv:"⬇ Exportar CSV completo", leads:"⬇ Exportar sólo leads", json:"⬇ Exportar JSON", clr:"🗑 Borrar todos los datos",
+    adm_btn:"📊 Admin", val_req:"Por favor complete los campos obligatorios (*)",
+    sending:"Enviando…"
+  },
+  en: {
+    eyebrow:"Peruvian Coffee · Buyer Survey 2026",
+    title:"Help us serve you better",
+    sub:"We are mercadodecafe.com, exporters of high-quality Peruvian coffee. This 18-question survey helps us understand your needs and offer you exactly what you are looking for.",
+    progress:(n,t)=>`${n} / ${t} questions`,
+    s1:"Your business profile", s2:"Purchasing habits & volumes",
+    s3:"Knowledge & perception of Peruvian coffee",
+    s4:"Purchasing decision criteria",
+    s5:"Logistics & import operations",
+    s6:"Commercial relationship with mercadodecafe.com",
+    q1:"What is the primary business type of your company?", q1ph:"– Select –",
+    q1a:["Roaster (specialty / premium)","Roaster (mass market)","Independent coffee shop / café","Coffee shop chain","HORECA (hotel, restaurant, catering)","Green coffee importer / distributor","Retailer / specialty store","Supermarket / mass retail","Other"],
+    q2:"In which country / market do you mainly operate?", q2ph:"– Select –",
+    q2a:["Germany","Italy","France","Spain","United Kingdom","Netherlands","Belgium","Switzerland","Austria","United States","Canada","Japan","South Korea","China","Australia","Other"],
+    q3:"How many years have you been buying imported green coffee?", q3ph:"– Select –",
+    q3a:["Less than 2 years","2 – 5 years","5 – 10 years","More than 10 years","Still exploring suppliers"],
+    q4:"What volume of green coffee do you purchase approximately per year?", q4ph:"– Select range –",
+    q4a:["Less than 1 tonne","1 – 5 tonnes","5 – 20 tonnes","20 – 100 tonnes","100 – 500 tonnes","More than 500 tonnes"],
+    q5:"How often do you place green coffee orders?",
+    q5c:["Weekly","Monthly","Quarterly","Twice a year","Once a year (harvest)","Spot purchases / no regular schedule"],
+    q6:"From which origins do you currently source coffee? (multiple choice)",
+    q6c:["Ethiopia","Colombia","Brazil","Guatemala","Kenya","Costa Rica","Peru","Vietnam","Honduras","Other origins"],
+    q7:"Have you previously purchased or tasted Peruvian coffee?",
+    q7c:["Yes, I buy it regularly","Yes, occasionally","I have tasted it but not bought","No, but I am interested in learning more","No, I had no references"],
+    q8:"Which aspects of Peruvian coffee interest you most? (multiple choice)",
+    q8c:["Specialty scores (SCA 84+)","Certified organic production","Fair trade / Fairtrade","Single-origin coffees / micro-lots","Competitive price vs other origins","Regional biodiversity (Cajamarca, Junín, Puno…)","High-altitude coffee","New origin for my portfolio"],
+    q9:"What is your current perception of Peruvian coffee quality compared to other Latin American origins?",
+    q9lo:"Inferior / I don't know it", q9hi:"Superior / excellent reputation",
+    q10:"Which factors are decisive when choosing a new green coffee supplier? (multiple choice)",
+    q10c:["Competitive and stable price","Consistent quality batch to batch","Samples available before purchase","Certifications (Organic, FT, RA)","Full traceability to farm level","Flexible order volumes","Reliable logistics and on-time delivery","Direct communication with exporter","Process variety (washed, natural, honey)","Origin story / storytelling"],
+    q11:"What is the maximum price you would be willing to pay for an 85+ SCA score Peruvian specialty coffee? (USD / lb)",
+    q11hint:"Reference: current specialty market Colombia/Ethiopia ranges $3.50–$5.50/lb",
+    q11basis:"Is that price on a FOB or DDP basis?",
+    q11basis_opts:["FOB (Free On Board)","DDP (Delivered Duty Paid)","Either / depends"],
+    country_search:"Search country…",
+    q11ph:"– Select range –",
+    q11a:["Less than $3.00 / lb","$3.00 – $3.50 / lb","$3.50 – $4.00 / lb","$4.00 – $4.50 / lb","$4.50 – $5.50 / lb","More than $5.50 / lb","Depends on the sample / profile"],
+    q12:"What is the minimum order volume you are comfortable with?",
+    q12c:["1 bag (60 kg) – micro-lot","5–10 bags (300–600 kg)","1 tonne (±17 bags)","5 tonnes (±84 bags)","Full container (17–20 t)","Multi-container (+20 t)"],
+    q13:"Which incoterm do you prefer for your imports?",
+    q13c5:"Flexible / negotiable",
+    q14:"What is your main challenge when importing green coffee from Latin America? (multiple choice)",
+    q14c:["Price volatility (C-market)","Inconsistent quality between batches","Unpredictable delivery times","Complex documentation and customs","EUDR compliance / traceability","Difficult communication with exporter","Minimum order volumes too high","High freight costs"],
+    q15:"How far in advance do you plan and place your coffee order?", q15ph:"– Select –",
+    q15a:["Less than 4 weeks ahead","4 – 8 weeks","2 – 4 months","4 – 6 months","More than 6 months (forward contracts)"],
+    q16:"Which additional services do you value most when working with a coffee exporter? (multiple choice)",
+    q16c:["Free samples before purchase","Harvest reports and updates","Virtual cuppings with exporter","Farm visits / origin trips","Origin marketing materials","Flexible payment / financing options","Real-time shipment tracking","Custom blend development"],
+    q17:"How likely are you to add Peruvian coffee from mercadodecafe.com to your portfolio in the next 12 months?",
+    q17lo:"Very unlikely", q17hi:"Definitely yes",
+    q18:"Would you like to receive free samples and a personalised commercial proposal?", q18ph:"– Select –",
+    q18a:["Yes, I am ready to receive samples now","Yes, within the next 3 – 6 months","I would first like more catalogue information","Not at this time"],
+    q18name:"Full name", q18ep:"Contact email", q18co:"Company",
+    q18lbl_name:"Full name", q18lbl_company:"Company", q18lbl_phone:"Phone / WhatsApp", q18lbl_email:"Contact email",
+    q18note:"All fields are optional. They will only be used to send you our commercial proposal.",
+    q18ph_name:"E.g.: Hans Müller", q18ph_company:"E.g.: Rösterei Müller GmbH", q18ph_phone:"E.g.: +49 89 123456", q18ph_email:"E.g.: hans@company.com",
+    submit:"Submit responses →",
+    privacy:"Your data is confidential and will be used solely to contact you with our Peruvian coffee proposal.",
+    suc_title:"Thank you for your time!", suc_btn:"Submit another response",
+    suc_msg:"We have received your responses. The mercadodecafe.com team will get in touch within 48 hours with personalised information and, if you requested it, a sample shipment.",
+    adm:"📊 Response panel", adm_total:"Total responses", adm_today:"Today",
+    adm_samples:"Requesting samples", adm_leads:"Left email",
+    csv:"⬇ Export full CSV", leads:"⬇ Export leads only", json:"⬇ Export JSON", clr:"🗑 Clear all data",
+    adm_btn:"📊 Admin", val_req:"Please complete the required fields (*)",
+    sending:"Sending…"
+  },
+  it: {
+    eyebrow:"Caffè Peruviano · Buyer Survey 2026",
+    title:"Aiutateci a servirvi meglio",
+    sub:"Siamo mercadodecafe.com, esportatori di caffè peruviano di alta qualità. Questo sondaggio di 18 domande ci aiuta a comprendere le vostre esigenze e a offrirvi esattamente ciò che cercate.",
+    progress:(n,t)=>`${n} / ${t} domande`,
+    s1:"Profilo della sua azienda", s2:"Abitudini e volumi di acquisto",
+    s3:"Conoscenza e percezione del caffè peruviano",
+    s4:"Criteri di decisione d'acquisto",
+    s5:"Logistica e operazioni di importazione",
+    s6:"Rapporto commerciale con mercadodecafe.com",
+    q1:"Qual è l'attività principale della sua azienda?", q1ph:"– Selezionare –",
+    q1a:["Torrefattore (specialty / premium)","Torrefattore (consumo di massa)","Caffetteria / coffee bar indipendente","Catena di caffetterie","HoReCa (hotel, ristorante, catering)","Importatore / Distributore di caffè verde","Dettagliante / negozio specializzato","Supermercato / grande distribuzione","Altro"],
+    q2:"In quale paese / mercato opera principalmente?", q2ph:"– Selezionare –",
+    q2a:["Germania","Italia","Francia","Spagna","Regno Unito","Paesi Bassi","Belgio","Svizzera","Austria","Stati Uniti","Canada","Giappone","Corea del Sud","Cina","Australia","Altro"],
+    q3:"Da quanti anni acquista caffè verde di importazione?", q3ph:"– Selezionare –",
+    q3a:["Meno di 2 anni","2 – 5 anni","5 – 10 anni","Più di 10 anni","Sto ancora esplorando i fornitori"],
+    q4:"Quale volume di caffè verde acquista approssimativamente all'anno?", q4ph:"– Selezionare intervallo –",
+    q4a:["Meno di 1 tonnellata","1 – 5 tonnellate","5 – 20 tonnellate","20 – 100 tonnellate","100 – 500 tonnellate","Più di 500 tonnellate"],
+    q5:"Con quale frequenza effettua ordini di caffè verde?",
+    q5c:["Settimanalmente","Mensilmente","Trimestralmente","Due volte l'anno","Una volta l'anno (raccolta)","Acquisti spot / senza regolarità"],
+    q6:"Da quali origini acquista caffè attualmente? (scelta multipla)",
+    q6c:["Etiopia","Colombia","Brasile","Guatemala","Kenya","Costa Rica","Perù","Vietnam","Honduras","Altre origini"],
+    q7:"Ha precedentemente acquistato o assaggiato caffè peruviano?",
+    q7c:["Sì, lo acquisto regolarmente","Sì, qualche volta in modo occasionale","L'ho assaggiato ma non acquistato","No, ma mi interessa conoscerlo","No, non avevo riferimenti"],
+    q8:"Quali aspetti del caffè peruviano la interessano di più? (scelta multipla)",
+    q8c:["Punteggi specialty (SCA 84+)","Produzione biologica certificata","Commercio equo / Fairtrade","Caffè di singola origine / micro-lotti","Prezzo competitivo vs altre origini","Biodiversità regionale (Cajamarca, Junín, Puno…)","Caffè d'alta quota","Nuova origine per il mio portafoglio"],
+    q9:"Qual è la sua percezione attuale della qualità del caffè peruviano rispetto ad altre origini latinoamericane?",
+    q9lo:"Inferiore / non lo conosco", q9hi:"Superiore / ottima reputazione",
+    q10:"Quali fattori sono determinanti nella scelta di un nuovo fornitore di caffè verde? (scelta multipla)",
+    q10c:["Prezzo competitivo e stabile","Qualità consistente lotto per lotto","Campioni disponibili prima dell'acquisto","Certificazioni (Bio, FT, RA)","Tracciabilità completa fino alla fattoria","Flessibilità del volume per ordine","Logistica affidabile e consegne puntuali","Comunicazione diretta con l'esportatore","Varietà di processi (washed, natural, honey)","Storia / storytelling dell'origine"],
+    q11:"Qual è il prezzo massimo che sarebbe disposto a pagare per un caffè specialty peruviano di 85+ punti SCA? (USD / lb)",
+    q11hint:"Riferimento: il mercato specialty attuale Colombia/Etiopia oscilla tra $3,50–$5,50/lb",
+    q11basis:"Questo prezzo è su base FOB o DDP?",
+    q11basis_opts:["FOB (Free On Board)","DDP (reso sdoganato a destino)","Indifferente / dipende"],
+    country_search:"Cerca paese…",
+    q11ph:"– Selezionare intervallo –",
+    q11a:["Meno di $3,00 / lb","$3,00 – $3,50 / lb","$3,50 – $4,00 / lb","$4,00 – $4,50 / lb","$4,50 – $5,50 / lb","Più di $5,50 / lb","Dipende dal campione / profilo"],
+    q12:"Qual è il volume minimo d'ordine con cui lavora comodamente?",
+    q12c:["1 sacco (60 kg) – micro-lotto","5–10 sacchi (300–600 kg)","1 tonnellata (±17 sacchi)","5 tonnellate (±84 sacchi)","Container completo (17–20 t)","Multi-container (+20 t)"],
+    q13:"Quale incoterm preferisce per le sue importazioni?",
+    q13c5:"Flessibile / negoziabile",
+    q14:"Qual è la sua principale sfida nell'importare caffè verde dall'America Latina? (scelta multipla)",
+    q14c:["Volatilità del prezzo (C-market)","Qualità inconsistente tra i lotti","Tempi di consegna imprevedibili","Documentazione e dogana complesse","Conformità EUDR / tracciabilità","Comunicazione difficile con l'esportatore","Volumi minimi troppo elevati","Costi di trasporto elevati"],
+    q15:"Con quanto anticipo pianifica e ordina il caffè?", q15ph:"– Selezionare –",
+    q15a:["Meno di 4 settimane di anticipo","4 – 8 settimane","2 – 4 mesi","4 – 6 mesi","Più di 6 mesi (contratti forward)"],
+    q16:"Quali servizi aggiuntivi apprezza di più quando lavora con un esportatore di caffè? (scelta multipla)",
+    q16c:["Campioni gratuiti prima dell'acquisto","Report di raccolta e aggiornamenti","Cupping virtuali con l'esportatore","Visite in fattoria / origin trip","Materiali di marketing dell'origine","Opzioni di pagamento flessibili / finanziamento","Tracking in tempo reale della spedizione","Sviluppo di blend personalizzati"],
+    q17:"Con quale probabilità aggiungerebbe caffè peruviano di mercadodecafe.com al suo portafoglio nei prossimi 12 mesi?",
+    q17lo:"Molto improbabile", q17hi:"Sicuramente sì",
+    q18:"Vorrebbe ricevere campioni gratuiti e una proposta commerciale personalizzata?", q18ph:"– Selezionare –",
+    q18a:["Sì, sono pronto/a a ricevere campioni ora","Sì, nei prossimi 3 – 6 mesi","Prima vorrei maggiori informazioni sul catalogo","Non per ora"],
+    q18name:"Nome completo", q18ep:"Email di contatto", q18co:"Azienda",
+    q18lbl_name:"Nome completo", q18lbl_company:"Azienda", q18lbl_phone:"Telefono / WhatsApp", q18lbl_email:"Email di contatto",
+    q18note:"Tutti i campi sono facoltativi. Verranno usati solo per inviarle la nostra proposta commerciale.",
+    q18ph_name:"Es: Hans Müller", q18ph_company:"Es: Rösterei Müller GmbH", q18ph_phone:"Es: +49 89 123456", q18ph_email:"Es: hans@azienda.com",
+    submit:"Invia le risposte →",
+    privacy:"I suoi dati sono riservati e verranno utilizzati esclusivamente per contattarla con la nostra proposta di caffè peruviano.",
+    suc_title:"Grazie per il suo tempo!", suc_btn:"Inviare un'altra risposta",
+    suc_msg:"Abbiamo ricevuto le sue risposte. Il team di mercadodecafe.com la contatterà entro 48 ore con informazioni personalizzate e, se lo ha richiesto, con l'invio di campioni.",
+    adm:"📊 Pannello risposte", adm_total:"Risposte totali", adm_today:"Oggi",
+    adm_samples:"Richiedono campioni", adm_leads:"Lasciato email",
+    csv:"⬇ Esporta CSV completo", leads:"⬇ Esporta solo lead", json:"⬇ Esporta JSON", clr:"🗑 Elimina tutti i dati",
+    adm_btn:"📊 Admin", val_req:"Compilare i campi obbligatori (*)",
+    sending:"Invio in corso…"
+  },
+  de: {
+    eyebrow:"Peruanischer Kaffee · Buyer Survey 2026",
+    title:"Helfen Sie uns, Sie besser zu bedienen",
+    sub:"Wir sind mercadodecafe.com, Exporteure von hochwertigem peruanischem Kaffee. Diese 18-Fragen-Umfrage hilft uns, Ihre Bedürfnisse zu verstehen und Ihnen genau das anzubieten, was Sie suchen.",
+    progress:(n,t)=>`${n} / ${t} Fragen`,
+    s1:"Ihr Unternehmensprofil", s2:"Einkaufsgewohnheiten und -volumen",
+    s3:"Kenntnisse und Wahrnehmung von peruanischem Kaffee",
+    s4:"Kaufentscheidungskriterien",
+    s5:"Logistik und Importabläufe",
+    s6:"Geschäftsbeziehung mit mercadodecafe.com",
+    q1:"Was ist die Haupttätigkeit Ihres Unternehmens?", q1ph:"– Auswählen –",
+    q1a:["Röster (Specialty / Premium)","Röster (Massenmarkt)","Unabhängiges Café / Coffee bar","Café-Kette","HORECA (Hotel, Restaurant, Catering)","Rohkaffeeimporteur / Händler","Einzelhändler / Fachgeschäft","Supermarkt / Lebensmitteleinzelhandel","Sonstiges"],
+    q2:"In welchem Land / Markt sind Sie hauptsächlich tätig?", q2ph:"– Auswählen –",
+    q2a:["Deutschland","Italien","Frankreich","Spanien","Vereinigtes Königreich","Niederlande","Belgien","Schweiz","Österreich","Vereinigte Staaten","Kanada","Japan","Südkorea","China","Australien","Sonstiges"],
+    q3:"Seit wie vielen Jahren kaufen Sie importierten Rohkaffee?", q3ph:"– Auswählen –",
+    q3a:["Weniger als 2 Jahre","2 – 5 Jahre","5 – 10 Jahre","Mehr als 10 Jahre","Ich erkunde noch Lieferanten"],
+    q4:"Welches Rohkaffeevolumen kaufen Sie ungefähr pro Jahr?", q4ph:"– Bereich auswählen –",
+    q4a:["Weniger als 1 Tonne","1 – 5 Tonnen","5 – 20 Tonnen","20 – 100 Tonnen","100 – 500 Tonnen","Mehr als 500 Tonnen"],
+    q5:"Wie häufig geben Sie Rohkaffeebestellungen auf?",
+    q5c:["Wöchentlich","Monatlich","Vierteljährlich","Zweimal im Jahr","Einmal im Jahr (Ernte)","Spot-Käufe / ohne festen Rhythmus"],
+    q6:"Von welchen Ursprüngen kaufen Sie derzeit Kaffee? (Mehrfachauswahl)",
+    q6c:["Äthiopien","Kolumbien","Brasilien","Guatemala","Kenia","Costa Rica","Peru","Vietnam","Honduras","Andere Ursprünge"],
+    q7:"Haben Sie peruanischen Kaffee schon früher gekauft oder probiert?",
+    q7c:["Ja, ich kaufe ihn regelmäßig","Ja, gelegentlich","Ich habe ihn probiert, aber nicht gekauft","Nein, aber ich bin daran interessiert","Nein, hatte keine Referenzen"],
+    q8:"Welche Aspekte des peruanischen Kaffees interessieren Sie am meisten? (Mehrfachauswahl)",
+    q8c:["Specialty-Bewertungen (SCA 84+)","Zertifizierter Bio-Anbau","Fair Trade / Fairtrade","Single-Origin-Kaffees / Mikro-Lots","Wettbewerbsfähiger Preis vs. anderen Ursprüngen","Regionale Biodiversität (Cajamarca, Junín, Puno…)","Hochlagenkaffee","Neuer Ursprung für mein Portfolio"],
+    q9:"Wie schätzen Sie die Qualität von peruanischem Kaffee im Vergleich zu anderen lateinamerikanischen Ursprüngen ein?",
+    q9lo:"Unterlegen / kenne ich nicht", q9hi:"Überlegen / ausgezeichneter Ruf",
+    q10:"Welche Faktoren sind bei der Auswahl eines neuen Rohkaffeelieferanten entscheidend? (Mehrfachauswahl)",
+    q10c:["Wettbewerbsfähiger und stabiler Preis","Gleichbleibende Qualität von Charge zu Charge","Muster vor dem Kauf verfügbar","Zertifizierungen (Bio, FT, RA)","Vollständige Rückverfolgbarkeit bis zur Farm","Flexible Bestellmengen","Zuverlässige Logistik und pünktliche Lieferung","Direktkommunikation mit dem Exporteur","Prozessvielfalt (washed, natural, honey)","Herkunftsgeschichte / Storytelling"],
+    q11:"Welchen Höchstpreis würden Sie für einen peruanischen Specialty-Kaffee mit 85+ SCA-Punkten zahlen? (USD / lb)",
+    q11hint:"Referenz: aktueller Specialty-Markt Kolumbien/Äthiopien liegt bei $3,50–$5,50/lb",
+    q11basis:"Gilt dieser Preis auf FOB- oder DDP-Basis?",
+    q11basis_opts:["FOB (Free On Board)","DDP (geliefert verzollt)","Egal / kommt darauf an"],
+    country_search:"Land suchen…",
+    q11ph:"– Bereich auswählen –",
+    q11a:["Weniger als $3,00 / lb","$3,00 – $3,50 / lb","$3,50 – $4,00 / lb","$4,00 – $4,50 / lb","$4,50 – $5,50 / lb","Mehr als $5,50 / lb","Abhängig von Muster / Profil"],
+    q12:"Welche Mindestbestellmenge bevorzugen Sie?",
+    q12c:["1 Sack (60 kg) – Mikro-Lot","5–10 Säcke (300–600 kg)","1 Tonne (±17 Säcke)","5 Tonnen (±84 Säcke)","Vollcontainer (17–20 t)","Mehrere Container (+20 t)"],
+    q13:"Welchen Incoterm bevorzugen Sie für Ihre Importe?",
+    q13c5:"Flexibel / verhandelbar",
+    q14:"Was ist Ihre größte Herausforderung beim Import von Rohkaffee aus Lateinamerika? (Mehrfachauswahl)",
+    q14c:["Preisvolatilität (C-market)","Uneinheitliche Qualität zwischen Chargen","Unberechenbare Lieferzeiten","Komplexe Dokumentation und Zoll","EUDR-Konformität / Rückverfolgbarkeit","Schwierige Kommunikation mit dem Exporteur","Mindestbestellmengen zu hoch","Hohe Frachtkosten"],
+    q15:"Wie weit im Voraus planen und bestellen Sie Ihren Kaffee?", q15ph:"– Auswählen –",
+    q15a:["Weniger als 4 Wochen vorher","4 – 8 Wochen","2 – 4 Monate","4 – 6 Monate","Mehr als 6 Monate (Forward-Kontrakte)"],
+    q16:"Welche Zusatzleistungen schätzen Sie beim Arbeiten mit einem Kaffeeexporteur am meisten? (Mehrfachauswahl)",
+    q16c:["Kostenlose Muster vor dem Kauf","Ernte-Reports und Updates","Virtuelle Cuppings mit dem Exporteur","Farmbesuche / Origin Trips","Marketingmaterialien zum Ursprung","Flexible Zahlungsoptionen / Finanzierung","Echtzeit-Sendungsverfolgung","Entwicklung individueller Blends"],
+    q17:"Wie wahrscheinlich ist es, dass Sie peruanischen Kaffee von mercadodecafe.com in den nächsten 12 Monaten in Ihr Portfolio aufnehmen?",
+    q17lo:"Sehr unwahrscheinlich", q17hi:"Auf jeden Fall",
+    q18:"Möchten Sie kostenlose Muster und ein personalisiertes Handelsangebot erhalten?", q18ph:"– Auswählen –",
+    q18a:["Ja, ich bin bereit, jetzt Muster zu erhalten","Ja, in den nächsten 3 – 6 Monaten","Ich möchte zunächst mehr Kataloginformationen","Derzeit nicht"],
+    q18name:"Vollständiger Name", q18ep:"Kontakt-E-Mail", q18co:"Unternehmen",
+    q18lbl_name:"Vollständiger Name", q18lbl_company:"Unternehmen", q18lbl_phone:"Telefon / WhatsApp", q18lbl_email:"Kontakt-E-Mail",
+    q18note:"Alle Felder sind freiwillig. Sie werden ausschließlich verwendet, um Ihnen unser Handelsangebot zuzusenden.",
+    q18ph_name:"Z.B.: Hans Müller", q18ph_company:"Z.B.: Rösterei Müller GmbH", q18ph_phone:"Z.B.: +49 89 123456", q18ph_email:"Z.B.: hans@firma.de",
+    submit:"Antworten absenden →",
+    privacy:"Ihre Daten sind vertraulich und werden ausschließlich für die Kontaktaufnahme mit unserem Angebot für peruanischen Kaffee verwendet.",
+    suc_title:"Vielen Dank für Ihre Zeit!", suc_btn:"Weitere Antwort senden",
+    suc_msg:"Wir haben Ihre Antworten erhalten. Das Team von mercadodecafe.com wird sich innerhalb von 48 Stunden mit personalisierten Informationen melden und, falls gewünscht, Muster zusenden.",
+    adm:"📊 Antwort-Panel", adm_total:"Antworten gesamt", adm_today:"Heute",
+    adm_samples:"Fordern Muster an", adm_leads:"E-Mail hinterlassen",
+    csv:"⬇ Vollständiges CSV exportieren", leads:"⬇ Nur Leads exportieren", json:"⬇ JSON exportieren", clr:"🗑 Alle Daten löschen",
+    adm_btn:"📊 Admin", val_req:"Bitte füllen Sie die Pflichtfelder (*) aus",
+    sending:"Wird gesendet…"
+  }
+};
+
+/* ═══ CONFIGURACIÓN GOOGLE SHEETS ═══
+   Pegue aquí la URL de su Web App de Google Apps Script
+   Ejemplo: https://script.google.com/macros/s/AKfycb.../exec
+   Deje en blanco ("") para usar sólo almacenamiento local.
+═══════════════════════════════════════ */
+const SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyzNOPUgOss8lVd8LSqtgvrAn72byg9eCDdE_ym4QjVICZN_Vz9i9m1llRbY4H4APC_bA/exec";  // ← PEGAR URL AQUÍ
+
+/* ═══ STATE ═══ */
+let currentLang = 'en';
+const STORAGE_KEY = 'mdc_buyer_survey_2026';
+const TOTAL_Q = 18;
+function getResponses(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ return []; } }
+function saveResponse(d){ const a=getResponses(); a.push(d); localStorage.setItem(STORAGE_KEY,JSON.stringify(a)); }
+
+/* Envía datos a Google Sheets (no bloquea el flujo) */
+async function sendToSheets(entry){
+  if(!SHEETS_ENDPOINT || SHEETS_ENDPOINT.trim()==="") return;
+  try{
+    await fetch(SHEETS_ENDPOINT,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(entry)
+    });
+  } catch(err){
+    console.warn("Google Sheets send failed (local backup kept):",err);
+  }
+}
+
+/* ═══ LANGUAGE ═══ */
+function setLang(lang){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent===lang.toUpperCase()));
+  document.documentElement.lang=lang;
+  const t=T[lang];
+  // hero
+  document.getElementById('h-eyebrow').textContent=t.eyebrow;
+  document.getElementById('h-title').textContent=t.title;
+  document.getElementById('h-sub').textContent=t.sub;
+  // sections
+  ['s1','s2','s3','s4','s5','s6'].forEach(s=>{const e=document.getElementById(s+'-title');if(e)e.textContent=t[s];});
+  // Q1
+  setSelectLabel('q1','q1-lbl',t.q1,'q1-ph',t.q1ph,'q1-a',t.q1a);
+  setSelectLabel('q2','q2-lbl',t.q2,'q2-ph',t.q2ph,'q2-a',t.q2a);
+  setSelectLabel('q3','q3-lbl',t.q3,'q3-ph',t.q3ph,'q3-a',t.q3a);
+  setSelectLabel('q4','q4-lbl',t.q4,'q4-ph',t.q4ph,'q4-a',t.q4a);
+  // radio groups
+  setRadioLabel('q5-lbl',t.q5,'q5-c',t.q5c);
+  // checkboxes
+  setCheckLabel('q6-lbl',t.q6,'q6-c',t.q6c);
+  setRadioLabel('q7-lbl',t.q7,'q7-c',t.q7c);
+  setCheckLabel('q8-lbl',t.q8,'q8-c',t.q8c);
+  // likert q9
+  setLikertLabel('q9-lbl',t.q9,'q9-lo',t.q9lo,'q9-hi',t.q9hi);
+  setCheckLabel('q10-lbl',t.q10,'q10-c',t.q10c);
+  // q11
+  const q11l=document.getElementById('q11-lbl'); if(q11l) q11l.textContent=t.q11;
+  const q11h=document.getElementById('q11-hint'); if(q11h) q11h.textContent=t.q11hint;
+  setSelectOpts('q11-ph',t.q11ph,'q11-a',t.q11a);
+  setRadioLabel('q11-basis-lbl',t.q11basis,'q11-basis-',t.q11basis_opts);
+  setRadioLabel('q12-lbl',t.q12,'q12-c',t.q12c);
+  // q13 incoterm
+  const q13l=document.getElementById('q13-lbl'); if(q13l){}  // label via card
+  const q13c5=document.getElementById('q13-c5'); if(q13c5) q13c5.textContent=t.q13c5;
+  setCheckLabel('q14-lbl',t.q14,'q14-c',t.q14c);
+  setSelectLabel('q15','q15-lbl',t.q15,'q15-ph',t.q15ph,'q15-a',t.q15a);
+  setCheckLabel('q16-lbl',t.q16,'q16-c',t.q16c);
+  setLikertLabel('q17-lbl',t.q17,'q17-lo',t.q17lo,'q17-hi',t.q17hi);
+  // q18
+  const q18l=document.getElementById('q18-lbl'); if(q18l) q18l.textContent=t.q18;
+  setSelectOpts('q18-ph',t.q18ph,'q18-a',t.q18a);
+  const q18n=document.getElementById('q18-name'); if(q18n) q18n.placeholder=t.q18ph_name;
+  const q18e=document.getElementById('q18-email'); if(q18e) q18e.placeholder=t.q18ph_email;
+  const q18co=document.getElementById('q18-company'); if(q18co) q18co.placeholder=t.q18ph_company;
+  const q18ph=document.getElementById('q18-phone'); if(q18ph) q18ph.placeholder=t.q18ph_phone;
+  const q18ln=document.getElementById('q18-lbl-name'); if(q18ln) q18ln.textContent=t.q18lbl_name;
+  const q18lco=document.getElementById('q18-lbl-company'); if(q18lco) q18lco.textContent=t.q18lbl_company;
+  const q18lph=document.getElementById('q18-lbl-phone'); if(q18lph) q18lph.textContent=t.q18lbl_phone;
+  const q18lem=document.getElementById('q18-lbl-email'); if(q18lem) q18lem.textContent=t.q18lbl_email;
+  const q18nt=document.getElementById('q18-fields-note'); if(q18nt) q18nt.textContent=t.q18note;
+  // buttons
+  document.getElementById('btn-submit').textContent=t.submit;
+  document.getElementById('privacy-note').textContent=t.privacy;
+  document.getElementById('suc-title').textContent=t.suc_title;
+  document.getElementById('suc-msg').textContent=t.suc_msg;
+  document.getElementById('suc-btn').textContent=t.suc_btn;
+  document.getElementById('adm-title').textContent=t.adm;
+  document.getElementById('stat-lbl-total').textContent=t.adm_total;
+  document.getElementById('stat-lbl-today').textContent=t.adm_today;
+  document.getElementById('stat-lbl-samples').textContent=t.adm_samples;
+  document.getElementById('stat-lbl-leads').textContent=t.adm_leads;
+  document.getElementById('btn-csv').textContent=t.csv;
+  document.getElementById('btn-leads').textContent=t.leads;
+  document.getElementById('btn-json').textContent=t.json;
+  document.getElementById('btn-clear').textContent=t.clr;
+  document.getElementById('admin-toggle-btn').textContent=t.adm_btn;
+  const csearch=document.getElementById('country-search'); if(csearch && t.country_search) csearch.placeholder=t.country_search;
+  // q13 label
+  const q13cards = document.querySelectorAll('.q-card');
+  q13cards.forEach(card=>{
+    const lbl=card.querySelector('.q-label');
+    if(lbl){
+      const badge=lbl.querySelector('.q-num-badge');
+      if(badge && badge.textContent==='13'){
+        const span=lbl.querySelector('span:nth-child(2)');
+        if(span) span.textContent=t.q13||'';
+      }
+    }
+  });
+  updateProgress();
+}
+
+function setSelectLabel(selId,lblId,lbl,phId,ph,optPrefix,opts){
+  const l=document.getElementById(lblId); if(l) l.textContent=lbl;
+  const p=document.getElementById(phId); if(p) p.textContent=ph;
+  setSelectOpts(phId,ph,optPrefix,opts);
+}
+function setSelectOpts(phId,ph,optPrefix,opts){
+  const p=document.getElementById(phId); if(p) p.textContent=ph;
+  if(opts) opts.forEach((txt,i)=>{const e=document.getElementById(optPrefix+(i+1));if(e)e.textContent=txt;});
+}
+function setRadioLabel(lblId,lbl,itemPrefix,items){
+  const l=document.getElementById(lblId); if(l) l.textContent=lbl;
+  if(items) items.forEach((txt,i)=>{const e=document.getElementById(itemPrefix+(i+1));if(e)e.textContent=txt;});
+}
+function setCheckLabel(lblId,lbl,itemPrefix,items){
+  const l=document.getElementById(lblId); if(l) l.textContent=lbl;
+  if(items) items.forEach((txt,i)=>{const e=document.getElementById(itemPrefix+(i+1));if(e)e.textContent=txt;});
+}
+function setLikertLabel(lblId,lbl,loId,lo,hiId,hi){
+  const l=document.getElementById(lblId); if(l) l.textContent=lbl;
+  const lo_el=document.getElementById(loId); if(lo_el) lo_el.textContent=lo;
+  const hi_el=document.getElementById(hiId); if(hi_el) hi_el.textContent=hi;
+}
+
+/* ═══ PROGRESS ═══ */
+function updateProgress(){
+  const t=T[currentLang]; let filled=0;
+  for(let i=1;i<=18;i++){
+    const el=document.querySelector(`[name="q${i}"]`);
+    if(!el) continue;
+    if(el.type==='radio'||el.type==='checkbox'){
+      if(document.querySelector(`[name="q${i}"]:checked`)) filled++;
+    } else if(el.value && el.value.trim()) filled++;
+  }
+  const pct=Math.round((filled/TOTAL_Q)*100);
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent=t.progress(filled,TOTAL_Q);
+}
+document.getElementById('survey-form').addEventListener('input',updateProgress);
+
+/* ═══ SUBMIT ═══ */
+document.getElementById('survey-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const t=T[currentLang];
+  if(!document.getElementById('q1').value||!document.getElementById('q2').value||!document.getElementById('q4').value){
+    alert(t.val_req); return;
+  }
+
+  // Deshabilitar botón y mostrar estado de carga
+  const btn = document.getElementById('btn-submit');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = t.sending || "Enviando…";
+  btn.style.opacity = "0.7";
+
+  const entry={
+    timestamp:new Date().toISOString(), lang:currentLang,
+    q1_role:document.getElementById('q1').value,
+    q2_market:document.getElementById('q2').value,
+    q3_years:document.getElementById('q3').value,
+    q4_volume:document.getElementById('q4').value,
+    q5_frequency:[...document.querySelectorAll('[name="q5"]:checked')].map(c=>c.value).join('|'),
+    q6_origins:[...document.querySelectorAll('[name="q6"]:checked')].map(c=>c.value).join('|'),
+    q7_peru_experience:[...document.querySelectorAll('[name="q7"]:checked')].map(c=>c.value).join('|'),
+    q8_peru_interests:[...document.querySelectorAll('[name="q8"]:checked')].map(c=>c.value).join('|'),
+    q9_peru_perception:(document.querySelector('[name="q9"]:checked')||{}).value||'',
+    q10_supplier_criteria:[...document.querySelectorAll('[name="q10"]:checked')].map(c=>c.value).join('|'),
+    q11_max_price_fob:document.getElementById('q11').value,
+    q11_basis:(document.querySelector('[name="q11_basis"]:checked')||{}).value||'',
+    q12_min_order:[...document.querySelectorAll('[name="q12"]:checked')].map(c=>c.value).join('|'),
+    q13_incoterm:[...document.querySelectorAll('[name="q13"]:checked')].map(c=>c.value).join('|'),
+    q14_challenges:[...document.querySelectorAll('[name="q14"]:checked')].map(c=>c.value).join('|'),
+    q15_lead_time:document.getElementById('q15').value,
+    q16_services:[...document.querySelectorAll('[name="q16"]:checked')].map(c=>c.value).join('|'),
+    q17_likelihood:(document.querySelector('[name="q17"]:checked')||{}).value||'',
+    q18_samples:document.getElementById('q18').value,
+    contact_name:document.getElementById('q18-name').value,
+    contact_email:document.getElementById('q18-email').value,
+    contact_phone:document.getElementById('q18-phone').value,
+    contact_company:document.getElementById('q18-company').value
+  };
+
+  // 1. Guardar en localStorage (siempre, como respaldo)
+  saveResponse(entry);
+  updateAdminStats();
+
+  // 2. Enviar a Google Sheets (asíncrono, sin bloquear)
+  await sendToSheets(entry);
+
+  // 3. Mostrar pantalla de éxito
+  btn.disabled = false;
+  btn.textContent = originalText;
+  btn.style.opacity = "1";
+  document.getElementById('survey-form').style.display='none';
+  document.getElementById('success-screen').style.display='block';
+  scrollToTopAndResize();
+});
+
+/* Lleva la vista al inicio de inmediato y avisa al contenedor (Wix) la nueva altura */
+function scrollToTopAndResize(){
+  window.scrollTo(0,0);
+  if (window.parent && window.parent !== window) {
+    try { window.parent.scrollTo(0,0); } catch(e){}
+  }
+  reportHeight();
+}
+
+/* Informa la altura real del contenido al contenedor padre (para auto-ajuste del iframe) */
+function reportHeight(){
+  const h = document.body.scrollHeight;
+  try {
+    window.parent.postMessage({ type:'mdc-survey-height', height: h }, '*');
+  } catch(e){}
+}
+window.addEventListener('load', reportHeight);
+window.addEventListener('resize', reportHeight);
+
+function resetForm(){
+  document.getElementById('survey-form').reset();
+  document.getElementById('survey-form').style.display='block';
+  document.getElementById('success-screen').style.display='none';
+  document.getElementById('progress-fill').style.width='0%';
+  updateProgress();
+  scrollToTopAndResize();
+}
+
+/* ═══ ADMIN ═══ */
+function updateAdminStats(){
+  const arr=getResponses();
+  document.getElementById('stat-total').textContent=arr.length;
+  const today=new Date().toISOString().slice(0,10);
+  document.getElementById('stat-today').textContent=arr.filter(r=>r.timestamp&&r.timestamp.startsWith(today)).length;
+  document.getElementById('stat-samples').textContent=arr.filter(r=>r.q18_samples&&(r.q18_samples==='si_ahora'||r.q18_samples==='yes_now'||r.q18_samples==='si_ahora'||['si_ahora','si_proximo'].includes(r.q18_samples))).length;
+  document.getElementById('stat-leads').textContent=arr.filter(r=>r.contact_email&&r.contact_email.includes('@')).length;
+}
+function toggleAdmin(){
+  const p=document.getElementById('admin-panel');
+  p.style.display=p.style.display==='block'?'none':'block';
+  updateAdminStats();
+}
+const CSV_HEADERS=['timestamp','lang','q1_role','q2_market','q3_years','q4_volume','q5_frequency','q6_origins','q7_peru_experience','q8_peru_interests','q9_peru_perception','q10_supplier_criteria','q11_max_price_fob','q11_basis','q12_min_order','q13_incoterm','q14_challenges','q15_lead_time','q16_services','q17_likelihood','q18_samples','contact_name','contact_email','contact_phone','contact_company'];
+const esc=v=>'"'+String(v||'').replace(/"/g,'""')+'"';
+function exportCSV(){
+  const arr=getResponses();
+  if(!arr.length){alert('No data yet');return;}
+  const rows=[CSV_HEADERS.map(esc).join(',')];
+  arr.forEach(r=>rows.push(CSV_HEADERS.map(k=>esc(r[k]||'')).join(',')));
+  download('mdc_survey_all_'+new Date().toISOString().slice(0,10)+'.csv',rows.join('\n'),'text/csv');
+}
+function exportLeads(){
+  const arr=getResponses().filter(r=>r.contact_email&&r.contact_email.includes('@'));
+  if(!arr.length){alert('No leads with email yet');return;}
+  const rows=[CSV_HEADERS.map(esc).join(',')];
+  arr.forEach(r=>rows.push(CSV_HEADERS.map(k=>esc(r[k]||'')).join(',')));
+  download('mdc_leads_'+new Date().toISOString().slice(0,10)+'.csv',rows.join('\n'),'text/csv');
+}
+function exportJSON(){
+  const arr=getResponses();
+  if(!arr.length){alert('No data yet');return;}
+  download('mdc_survey_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(arr,null,2),'application/json');
+}
+function download(fn,content,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=fn;a.click();
+  URL.revokeObjectURL(url);
+}
+function clearData(){
+  if(confirm('Delete all data?')){localStorage.removeItem(STORAGE_KEY);updateAdminStats();}
+}
+/* init */
+setLang('en');
+updateAdminStats(); updateProgress();
+
+/* ═══ ADMIN VISIBILITY ═══
+   El botón Admin permanece OCULTO para el público.
+   Dos formas de mostrarlo (sólo para usted):
+   1) Abriendo la encuesta con #admin al final de la URL
+      (funciona si abre el archivo directamente).
+   2) Dentro de Wix: toque/clic 5 veces seguidas sobre el año "2026"
+      del pie de página (funciona siempre, también en móvil).
+═══════════════════════════════════════ */
+function revealAdmin(){
+  const ab=document.getElementById('admin-toggle-btn');
+  if(ab) ab.style.display='inline-block';
+}
+function hideAdmin(){
+  const ab=document.getElementById('admin-toggle-btn');
+  if(ab) ab.style.display='none';
+  const p=document.getElementById('admin-panel');
+  if(p) p.style.display='none';
+}
+function refreshAdminVisibility(){
+  if((location.hash||'').toLowerCase()==='#admin') revealAdmin();
+  else hideAdmin();
+}
+refreshAdminVisibility();
+window.addEventListener('hashchange', refreshAdminVisibility);
+
+let admClicks=0, admTimer=null;
+const admTrig=document.getElementById('adm-trigger');
+if(admTrig){
+  admTrig.addEventListener('click', function(){
+    admClicks++;
+    clearTimeout(admTimer);
+    admTimer=setTimeout(()=>{admClicks=0;},3000);
+    if(admClicks>=5){ admClicks=0; revealAdmin(); }
+  });
+}
+
+/* ═══ COUNTRY PHONE PICKER ═══ */
+const COUNTRIES = [
+  {flag:'🇩🇪',name:'Alemania / Germany',dial:'+49'},
+  {flag:'🇦🇹',name:'Austria',dial:'+43'},
+  {flag:'🇧🇪',name:'Bélgica / Belgium',dial:'+32'},
+  {flag:'🇨🇭',name:'Suiza / Switzerland',dial:'+41'},
+  {flag:'🇪🇸',name:'España / Spain',dial:'+34'},
+  {flag:'🇫🇷',name:'Francia / France',dial:'+33'},
+  {flag:'🇬🇧',name:'Reino Unido / UK',dial:'+44'},
+  {flag:'🇮🇹',name:'Italia / Italy',dial:'+39'},
+  {flag:'🇳🇱',name:'Países Bajos / Netherlands',dial:'+31'},
+  {flag:'🇵🇹',name:'Portugal',dial:'+351'},
+  {flag:'🇵🇱',name:'Polonia / Poland',dial:'+48'},
+  {flag:'🇸🇪',name:'Suecia / Sweden',dial:'+46'},
+  {flag:'🇳🇴',name:'Noruega / Norway',dial:'+47'},
+  {flag:'🇩🇰',name:'Dinamarca / Denmark',dial:'+45'},
+  {flag:'🇫🇮',name:'Finlandia / Finland',dial:'+358'},
+  {flag:'🇨🇿',name:'República Checa / Czech Rep.',dial:'+420'},
+  {flag:'🇭🇺',name:'Hungría / Hungary',dial:'+36'},
+  {flag:'🇷🇴',name:'Rumanía / Romania',dial:'+40'},
+  {flag:'🇺🇸',name:'Estados Unidos / USA',dial:'+1'},
+  {flag:'🇨🇦',name:'Canadá / Canada',dial:'+1'},
+  {flag:'🇲🇽',name:'México / Mexico',dial:'+52'},
+  {flag:'🇧🇷',name:'Brasil / Brazil',dial:'+55'},
+  {flag:'🇵🇪',name:'Perú / Peru',dial:'+51'},
+  {flag:'🇦🇺',name:'Australia',dial:'+61'},
+  {flag:'🇯🇵',name:'Japón / Japan',dial:'+81'},
+  {flag:'🇰🇷',name:'Corea del Sur / South Korea',dial:'+82'},
+  {flag:'🇨🇳',name:'China',dial:'+86'},
+  {flag:'🇸🇬',name:'Singapur / Singapore',dial:'+65'},
+  {flag:'🇭🇰',name:'Hong Kong',dial:'+852'},
+  {flag:'🇮🇳',name:'India',dial:'+91'},
+  {flag:'🇦🇪',name:'Emiratos / UAE',dial:'+971'},
+  {flag:'🇳🇿',name:'Nueva Zelanda / New Zealand',dial:'+64'},
+  {flag:'🇿🇦',name:'Sudáfrica / South Africa',dial:'+27'},
+];
+
+let selectedCountry = { flag:'🌐', dial:'', name:'' };
+let dropOpen = false;
+
+function renderCountryList(filter) {
+  const list = document.getElementById('country-list');
+  if (!list) return;
+  const q = (filter || '').toLowerCase();
+  const filtered = q ? COUNTRIES.filter(c =>
+    c.name.toLowerCase().includes(q) || c.dial.includes(q)
+  ) : COUNTRIES;
+  list.innerHTML = filtered.map((c, i) =>
+    '<div class="country-item" onclick="selectCountry(' + i + ',\'' + c.flag + '\',\'' + c.dial + '\',\'' + c.name + '\')">' +
+    '<span class="ci-flag">' + c.flag + '</span>' +
+    '<span class="ci-name">' + c.name + '</span>' +
+    '<span class="ci-dial">' + c.dial + '</span>' +
+    '</div>'
+  ).join('');
+}
+
+function selectCountry(idx, flag, dial, name) {
+  selectedCountry = { flag, dial, name };
+  const fe = document.getElementById('phone-flag-emoji');
+  const dc = document.getElementById('phone-dial-code');
+  if (fe) fe.textContent = flag;
+  if (dc) dc.textContent = dial;
+  updateFullPhone();
+  closeCountryDrop();
+}
+
+function updateFullPhone() {
+  const num = (document.getElementById('q18-phone-num') || {}).value || '';
+  const hidden = document.getElementById('q18-phone');
+  if (hidden) hidden.value = (selectedCountry.dial ? selectedCountry.dial + ' ' : '') + num.trim();
+}
+
+function toggleCountryDrop() {
+  dropOpen = !dropOpen;
+  const drop = document.getElementById('country-drop');
+  const search = document.getElementById('country-search');
+  if (!drop) return;
+  if (dropOpen) {
+    renderCountryList('');
+    drop.style.display = 'block';
+    if (search) { search.value = ''; search.focus(); }
+  } else {
+    drop.style.display = 'none';
+  }
+}
+
+function closeCountryDrop() {
+  dropOpen = false;
+  const drop = document.getElementById('country-drop');
+  if (drop) drop.style.display = 'none';
+}
+
+function filterCountries(val) {
+  renderCountryList(val);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#phone-flag-btn') && !e.target.closest('#country-drop')) {
+    closeCountryDrop();
+  }
+});
+
+</script>
+</body>
+</html>
