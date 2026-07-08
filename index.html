@@ -932,23 +932,49 @@ section[id]{scroll-margin-top:84px}
 
 <a class="wa" href="https://wa.me/51981586552" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 .9.7 1.6 1 1.9 1.1.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.1.1.5 0 1z"/></svg></a>
 
+<!-- El widget de Identity DEBE cargarse ANTES del script principal, para que los eventos de login/logout se registren. -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
 <div class="modal" id="checkoutModal" aria-hidden="true"><div class="modal-box" role="dialog" aria-modal="true">
   <button class="modal-close" id="checkoutModalClose" aria-label="Cerrar">×</button>
   <h3 data-i18n="co_title">Finalizar compra</h3><p class="sub" data-i18n="co_sub">x</p>
   <form id="formCheckout">
-    <div class="row2"><div class="field"><label data-i18n="co_name">Nombres</label><input required name="nombres"></div>
-      <div class="field"><label data-i18n="co_lastname">Apellidos</label><input required name="apellidos"></div></div>
-    <div class="row2"><div class="field"><label data-i18n="co_email">Correo</label><input required type="email" name="email"></div>
-      <div class="field"><label data-i18n="co_phone">Teléfono</label><input required name="telefono"></div></div>
-    <div class="row2"><div class="field"><label data-i18n="co_address">Dirección</label><input required name="direccion"></div>
-      <div class="field"><label data-i18n="co_city">Ciudad</label><input required name="ciudad" value="Lima"></div></div>
-    <div class="field"><label data-i18n="co_doc">DNI / documento</label><input required name="documento"></div>
-    <div id="izipayFormWrap" class="kr-embedded" style="display:none;margin:14px 0">
-      <div class="kr-pan"></div><div class="kr-expiry"></div><div class="kr-security-code"></div>
-      <button class="btn btn--solid kr-payment-button" type="button" style="width:100%" data-i18n="co_pay_btn">Pagar con tarjeta</button>
-      <div class="kr-form-error"></div>
+    <div id="coStep1">
+      <h4 style="margin:6px 0 10px" data-i18n="co_recv_t">Entrega: ¿quién recibe y dónde?</h4>
+      <div class="row2"><div class="field"><label data-i18n="co_name">Nombres</label><input required name="nombres"></div>
+        <div class="field"><label data-i18n="co_lastname">Apellidos</label><input required name="apellidos"></div></div>
+      <div class="row2"><div class="field"><label data-i18n="co_email">Correo</label><input required type="email" name="email"></div>
+        <div class="field"><label data-i18n="co_phone">Teléfono / WhatsApp</label><input required name="telefono"></div></div>
+      <div class="field"><label data-i18n="co_address">Dirección exacta de entrega</label><input required name="direccion" placeholder="Av. / Calle, número, dpto."></div>
+      <div class="field"><label data-i18n="co_ref">Referencia (opcional)</label><input name="referencia" placeholder="Frente al parque, portón verde…"></div>
+      <div class="field"><label data-i18n="co_zone">Zona / ciudad de entrega (define el flete)</label><select required name="zona" id="coZona"></select></div>
+      <h4 style="margin:14px 0 10px" data-i18n="co_fact_t">Comprobante</h4>
+      <div class="field" style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+        <label style="display:flex;gap:6px;align-items:center;font-weight:600;cursor:pointer"><input type="radio" name="comprobante" value="boleta" checked> <span data-i18n="co_boleta">Boleta (DNI)</span></label>
+        <label style="display:flex;gap:6px;align-items:center;font-weight:600;cursor:pointer"><input type="radio" name="comprobante" value="factura"> <span data-i18n="co_factura">Factura (RUC)</span></label>
+      </div>
+      <div id="coBoletaFields"><div class="field"><label data-i18n="co_dni">DNI de quien recibe</label><input required name="dni" id="coDni" inputmode="numeric"></div></div>
+      <div id="coFacturaFields" style="display:none">
+        <div class="row2"><div class="field"><label data-i18n="co_ruc">RUC</label><input name="ruc" id="coRuc" inputmode="numeric"></div>
+          <div class="field"><label data-i18n="co_razon">Razón social</label><input name="razon" id="coRazon"></div></div>
+      </div>
+      <button class="btn btn--solid" type="button" style="width:100%" id="coNextBtn" data-i18n="co_next">Continuar →</button>
     </div>
-    <button class="btn btn--solid" type="submit" style="width:100%" id="checkoutSubmit" data-i18n="co_pay_btn">Pagar con tarjeta</button>
+    <div id="coStep2" style="display:none">
+      <h4 style="margin:6px 0 10px" data-i18n="co_confirm_t">Confirma tu pedido</h4>
+      <div id="coSumItems"></div>
+      <div class="cart-sub"><span data-i18n="co_subtotal">Subtotal</span><span class="mono" id="coSumSub"></span></div>
+      <div class="cart-sub"><span><span data-i18n="co_flete">Flete</span> <span id="coSumZona" style="color:var(--muted);font-size:12px"></span></span><span class="mono" id="coSumFlete"></span></div>
+      <div class="cart-sub" style="font-weight:800;font-size:17px"><span data-i18n="co_total">Total a pagar</span><span class="mono" id="coSumTotal"></span></div>
+      <div id="coSumEnvio" style="font-size:13px;color:var(--muted);margin:12px 0;line-height:1.6"></div>
+      <button class="btn" type="button" id="coBackBtn" style="width:100%;margin-bottom:8px" data-i18n="co_back">← Editar datos</button>
+      <div id="izipayFormWrap" class="kr-embedded" style="display:none;margin:14px 0">
+        <div class="kr-pan"></div><div class="kr-expiry"></div><div class="kr-security-code"></div>
+        <button class="btn btn--solid kr-payment-button" type="button" style="width:100%" data-i18n="co_pay_btn">Pagar con tarjeta</button>
+        <div class="kr-form-error"></div>
+      </div>
+      <button class="btn btn--solid" type="submit" style="width:100%" id="checkoutSubmit" data-i18n="co_confirm_btn">Confirmar y pagar</button>
+    </div>
     <p class="form-note" style="text-align:center;margin-top:10px"><a href="#" id="checkoutWaLink" data-i18n="co_wa_alt">x</a></p>
     <div class="form-ok" id="okCheckout" data-i18n="co_ok">x</div>
     <div class="form-ok" id="errCheckout" style="display:none;background:#f5d9d3;border-color:var(--cereza);color:var(--cereza-dark)" data-i18n="co_err">x</div>
@@ -982,7 +1008,29 @@ Object.assign(T,{
  marca_rt_note:{es:"Kardex en semi–tiempo real: se actualiza automáticamente cada 30 segundos mientras esta página esté abierta.",en:"Semi real-time kardex: it refreshes automatically every 30 seconds while this page is open."},
  marca_guias_t:{es:"Guías de remisión",en:"Dispatch notes"},
  marca_dir_t:{es:"Direcciones consignadas",en:"Consignment addresses"},
- co_err_gateway:{es:"La pasarela rechazó la operación: ",en:"The payment gateway rejected the operation: "}
+ co_err_gateway:{es:"La pasarela rechazó la operación: ",en:"The payment gateway rejected the operation: "},
+ co_sub:{es:"Completa los datos de entrega y facturación, confirma tu pedido y paga con tarjeta.",en:"Fill in delivery and billing details, confirm your order and pay by card."},
+ co_recv_t:{es:"Entrega: ¿quién recibe y dónde?",en:"Delivery: who receives and where?"},
+ co_phone:{es:"Teléfono / WhatsApp",en:"Phone / WhatsApp"},
+ co_address:{es:"Dirección exacta de entrega",en:"Exact delivery address"},
+ co_ref:{es:"Referencia (opcional)",en:"Reference (optional)"},
+ co_zone:{es:"Zona / ciudad de entrega (define el flete)",en:"Delivery zone / city (sets the shipping fee)"},
+ co_fact_t:{es:"Comprobante",en:"Billing document"},
+ co_boleta:{es:"Boleta (DNI)",en:"Receipt (DNI)"},
+ co_factura:{es:"Factura (RUC)",en:"Invoice (RUC)"},
+ co_dni:{es:"DNI de quien recibe",en:"Receiver's DNI"},
+ co_ruc:{es:"RUC",en:"Tax ID (RUC)"},
+ co_razon:{es:"Razón social",en:"Company name"},
+ co_next:{es:"Continuar →",en:"Continue →"},
+ co_back:{es:"← Editar datos",en:"← Edit details"},
+ co_confirm_t:{es:"Confirma tu pedido",en:"Confirm your order"},
+ co_confirm_btn:{es:"Confirmar y pagar con tarjeta",en:"Confirm and pay by card"},
+ co_subtotal:{es:"Subtotal",en:"Subtotal"},
+ co_flete:{es:"Flete",en:"Shipping"},
+ co_total:{es:"Total a pagar",en:"Total to pay"},
+ co_recv_sum:{es:"Recibe",en:"Receiver"},
+ co_addr_sum:{es:"Entrega en",en:"Deliver to"},
+ co_ok:{es:"¡Pago recibido! Te enviamos un correo de agradecimiento con el detalle de tu pedido. Coordinaremos la entrega por WhatsApp.",en:"Payment received! We sent you a thank-you email with your order details. We'll coordinate delivery via WhatsApp."}
 });
 let LANG='es', curCap='cajamarca';
 function t(k){return (T[k]&&(T[k][LANG]||T[k].es))||'';}
@@ -1425,7 +1473,63 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(typeof closeCart
 
 /* ================= CHECKOUT (Izipay) ================= */
 const checkoutModal=document.getElementById('checkoutModal');
-function openCheckout(){if(CART.length===0)return;closeCart();window.scrollTo(0,0);checkoutModal.classList.add('open');checkoutModal.setAttribute('aria-hidden','false');okCheckout.style.display='none';errCheckout.style.display='none';izipayFormWrap.style.display='none';checkoutSubmit.style.display='block';checkoutSubmit.disabled=false;checkoutSubmit.textContent=t('co_pay_btn');const lines=CART.map(c=>{const p=STORE_BY_ID[c.id];return p?`${c.qty}x ${p.brand} ${t(p.key)}`:'';}).filter(Boolean).join(', ');checkoutWaLink.href=waLink(`Hola, quiero coordinar mi pedido de la Tienda El Tostador: ${lines}. Total: S/ ${cartTotalSoles().toFixed(2)}.`);checkoutWaLink.target='_blank';sendToSheet({type:'pedido_tienda',items:lines,total:cartTotalSoles().toFixed(2)});}
+/* FLETES: EDITA AQUÍ los costos de envío (S/) por zona, según las tarifas de las agencias motorizadas. */
+const FLETES=[
+ {id:'lima-centro',label:'Lima Centro — Cercado, Breña, La Victoria, Rímac',costo:10},
+ {id:'lima-moderna',label:'Lima Moderna — Miraflores, San Isidro, Surco, San Borja, Barranco, Jesús María, Lince, Magdalena, Pueblo Libre, San Miguel, Surquillo',costo:12},
+ {id:'lima-este',label:'Lima Este — Ate, Santa Anita, La Molina, San Juan de Lurigancho, El Agustino',costo:15},
+ {id:'lima-norte',label:'Lima Norte — Los Olivos, San Martín de Porres, Comas, Independencia, Puente Piedra',costo:15},
+ {id:'lima-sur',label:'Lima Sur — San Juan de Miraflores, Villa María del Triunfo, Villa El Salvador, Chorrillos, Lurín',costo:15},
+ {id:'callao',label:'Callao',costo:15},
+ {id:'arequipa',label:'Arequipa — motorizado local',costo:12},
+ {id:'trujillo',label:'Trujillo — motorizado local',costo:12},
+ {id:'cusco',label:'Cusco — motorizado local',costo:12},
+ {id:'provincia',label:'Otra ciudad del Perú — agencia (Olva / Shalom)',costo:20}
+];
+const coZonaSel=document.getElementById('coZona');
+coZonaSel.innerHTML=FLETES.map(f=>`<option value="${f.id}">${f.label} · S/ ${f.costo.toFixed(2)}</option>`).join('');
+function fleteSel(){return FLETES.find(f=>f.id===coZonaSel.value)||FLETES[FLETES.length-1];}
+function cartLines(){return CART.map(c=>{const p=STORE_BY_ID[c.id];return p?`${c.qty}x ${p.brand} ${t(p.key)}`:'';}).filter(Boolean).join(', ');}
+function updateComprobanteUI(){
+ const sel=document.querySelector('input[name="comprobante"]:checked');
+ const fact=!!sel&&sel.value==='factura';
+ document.getElementById('coBoletaFields').style.display=fact?'none':'block';
+ document.getElementById('coFacturaFields').style.display=fact?'block':'none';
+ document.getElementById('coDni').required=!fact;
+ document.getElementById('coRuc').required=fact;
+ document.getElementById('coRazon').required=fact;
+}
+document.querySelectorAll('input[name="comprobante"]').forEach(r=>r.addEventListener('change',updateComprobanteUI));
+function coShowStep(n){
+ document.getElementById('coStep1').style.display=n===1?'block':'none';
+ document.getElementById('coStep2').style.display=n===2?'block':'none';
+ document.getElementById('formCheckout').noValidate=(n===2);
+}
+function fillCoSummary(){
+ const sub=cartTotalSoles(),fl=fleteSel(),total=sub+fl.costo;
+ document.getElementById('coSumItems').innerHTML=CART.map(c=>{const p=STORE_BY_ID[c.id];return p?`<div class="cart-sub"><span>${c.qty}x ${p.brand} ${t(p.key)}</span><span class="mono">S/ ${(p.soles*c.qty).toFixed(2)}</span></div>`:'';}).join('');
+ document.getElementById('coSumSub').textContent='S/ '+sub.toFixed(2);
+ document.getElementById('coSumZona').textContent='('+fl.label+')';
+ document.getElementById('coSumFlete').textContent='S/ '+fl.costo.toFixed(2);
+ document.getElementById('coSumTotal').textContent='S/ '+total.toFixed(2);
+ const fd=Object.fromEntries(new FormData(document.getElementById('formCheckout')).entries());
+ const fact=fd.comprobante==='factura';
+ document.getElementById('coSumEnvio').innerHTML=
+  `<b>${t('co_recv_sum')}:</b> ${fd.nombres||''} ${fd.apellidos||''} · ${fd.telefono||''}<br>`+
+  `<b>${t('co_addr_sum')}:</b> ${fd.direccion||''}${fd.referencia?' (Ref: '+fd.referencia+')':''}<br>`+
+  `<b>${t('co_fact_t')}:</b> ${fact?(t('co_factura')+' · '+(fd.ruc||'')+' · '+(fd.razon||'')):(t('co_boleta')+' · '+(fd.dni||''))}`;
+}
+document.getElementById('coNextBtn').addEventListener('click',()=>{
+ if(!document.getElementById('formCheckout').reportValidity())return;
+ fillCoSummary();coShowStep(2);
+ checkoutModal.querySelector('.modal-box').scrollTop=0;
+});
+document.getElementById('coBackBtn').addEventListener('click',()=>{
+ coShowStep(1);
+ izipayFormWrap.style.display='none';errCheckout.style.display='none';
+ checkoutSubmit.style.display='block';checkoutSubmit.disabled=false;checkoutSubmit.textContent=t('co_confirm_btn');
+});
+function openCheckout(){if(CART.length===0)return;closeCart();window.scrollTo(0,0);checkoutModal.classList.add('open');checkoutModal.setAttribute('aria-hidden','false');okCheckout.style.display='none';errCheckout.style.display='none';izipayFormWrap.style.display='none';checkoutSubmit.style.display='block';checkoutSubmit.disabled=false;checkoutSubmit.textContent=t('co_confirm_btn');coShowStep(1);updateComprobanteUI();const lines=cartLines();checkoutWaLink.href=waLink(`Hola, quiero coordinar mi pedido de la Tienda El Tostador: ${lines}. Total productos: S/ ${cartTotalSoles().toFixed(2)}.`);checkoutWaLink.target='_blank';sendToSheet({type:'pedido_tienda',items:lines,total:cartTotalSoles().toFixed(2)});}
 function closeCheckout(){checkoutModal.classList.remove('open');checkoutModal.setAttribute('aria-hidden','true');}
 checkoutModalClose.addEventListener('click',closeCheckout);
 checkoutModal.addEventListener('click',e=>{if(e.target===checkoutModal)closeCheckout();});
@@ -1433,9 +1537,10 @@ cartCheckout.addEventListener('click',e=>{e.preventDefault();openCheckout();});
 document.getElementById('formCheckout').addEventListener('submit',async e=>{
  e.preventDefault();
  const fd=Object.fromEntries(new FormData(e.target).entries());
- const lines=CART.map(c=>{const p=STORE_BY_ID[c.id];return p?`${c.qty}x ${p.brand} ${t(p.key)}`:'';}).filter(Boolean).join(', ');
- const total=cartTotalSoles();
- checkoutWaLink.href=waLink(`Hola, quiero coordinar mi pedido: ${lines}. Total: S/ ${total.toFixed(2)}. Nombre: ${fd.nombres} ${fd.apellidos}. Dirección: ${fd.direccion}, ${fd.ciudad}. Tel: ${fd.telefono}.`);
+ const lines=cartLines();
+ const subtotal=cartTotalSoles(),fl=fleteSel(),total=subtotal+fl.costo;
+ const fact=fd.comprobante==='factura';
+ checkoutWaLink.href=waLink(`Hola, quiero coordinar mi pedido: ${lines}. Subtotal: S/ ${subtotal.toFixed(2)} + flete S/ ${fl.costo.toFixed(2)} (${fl.label}) = Total S/ ${total.toFixed(2)}. Recibe: ${fd.nombres} ${fd.apellidos}, ${fd.direccion}. Tel: ${fd.telefono}. Comprobante: ${fact?('Factura RUC '+(fd.ruc||'')):('Boleta DNI '+(fd.dni||''))}.`);
  checkoutSubmit.disabled=true;const orig=checkoutSubmit.textContent;checkoutSubmit.textContent=t('co_processing');
  try{
   const r=await fetch('/.netlify/functions/izipay-create-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:total,currency:'PEN',orderId:'MDC-'+Date.now(),customer:fd})});
@@ -1457,7 +1562,7 @@ document.getElementById('formCheckout').addEventListener('submit',async e=>{
    KR.onSubmit(({clientAnswer})=>{
     const status=clientAnswer&&clientAnswer.orderStatus;
     if(status==='PAID'){
-     sendToSheet({type:'pedido_pagado',items:lines,total:total.toFixed(2),cliente:fd.nombres+' '+fd.apellidos,email:fd.email});
+     sendToSheet({type:'pedido_pagado',items:lines,subtotal:subtotal.toFixed(2),flete:fl.costo.toFixed(2),total:total.toFixed(2),zona:fl.label,cliente:fd.nombres+' '+fd.apellidos,email:fd.email,telefono:fd.telefono||'',direccion:(fd.direccion||'')+(fd.referencia?(' (Ref: '+fd.referencia+')'):''),comprobante:fact?'Factura':'Boleta',documento:fact?(fd.ruc||''):(fd.dni||''),razon:fact?(fd.razon||''):''});
      CART=[];renderCart();okCheckout.style.display='block';izipayFormWrap.style.display='none';
     }else{errCheckout.textContent=t('co_err');errCheckout.style.display='block';}
    });
@@ -1489,7 +1594,6 @@ function initLang(){
 langSel.addEventListener('change',()=>{try{localStorage.setItem('mdc_lang',langSel.value);}catch(e){}setLang(langSel.value);});
 initLang();
 </script>
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <!-- ⚠️ IZIPAY: el valor de kr-public-key DEBE ser la "Clave pública de test" (o de producción) de TU tienda
      Mercadodecafeperu (50298228). Verifícala en: Back Office Vendedor → Configuración → Tienda → pestaña
      "Claves de API REST" → "Clave pública de test". Debe empezar con "50298228:testpublickey_..."
