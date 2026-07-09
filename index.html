@@ -1756,17 +1756,21 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(typeof closeCart
 const checkoutModal=document.getElementById('checkoutModal');
 /* FLETES: EDITA AQUÍ los costos de envío (S/) por zona, según las tarifas de las agencias motorizadas. */
 const FLETES=[
- {id:'lima-centro',label:'Lima Centro — Cercado, Breña, La Victoria, Rímac',costo:10},
- {id:'lima-moderna',label:'Lima Moderna — Miraflores, San Isidro, Surco, San Borja, Barranco, Jesús María, Lince, Magdalena, Pueblo Libre, San Miguel, Surquillo',costo:12},
- {id:'lima-este',label:'Lima Este — Ate, Santa Anita, La Molina, San Juan de Lurigancho, El Agustino',costo:15},
- {id:'lima-norte',label:'Lima Norte — Los Olivos, San Martín de Porres, Comas, Independencia, Puente Piedra',costo:15},
- {id:'lima-sur',label:'Lima Sur — San Juan de Miraflores, Villa María del Triunfo, Villa El Salvador, Chorrillos, Lurín',costo:15},
- {id:'callao',label:'Callao',costo:15},
- {id:'arequipa',label:'Arequipa — motorizado local',costo:12},
- {id:'trujillo',label:'Trujillo — motorizado local',costo:12},
- {id:'cusco',label:'Cusco — motorizado local',costo:12},
- {id:'provincia',label:'Otra ciudad del Perú — agencia (Olva / Shalom)',costo:20},
- {id:'prueba',label:'miraflores prueba— motorizado local',costo:1}
+ {id:'miraflores',label:'Miraflores — motorizado local',costo:8},
+ {id:'san-isidro',label:'San Isidro — motorizado local',costo:10},
+ {id:'surquillo',label:'Surquillo — motorizado local',costo:10},
+ {id:'barranco',label:'Barranco — motorizado local',costo:10},
+ {id:'san-borja',label:'San Borja — motorizado local',costo:12},
+ {id:'lince',label:'Lince — motorizado local',costo:12},
+ {id:'jesus-maria',label:'Jesús María — motorizado local',costo:14},
+ {id:'magdalena',label:'Magdalena — motorizado local',costo:14},
+ {id:'pueblo-libre',label:'Pueblo Libre — motorizado local',costo:14},
+ {id:'surco',label:'Santiago de Surco — motorizado local',costo:16},
+ {id:'chorrillos',label:'Chorrillos — motorizado local',costo:20},
+ {id:'san-miguel',label:'San Miguel — motorizado local',costo:20},
+ {id:'cercado-lima',label:'Cercado de Lima — motorizado local',costo:20},
+ {id:'la-molina',label:'La Molina — motorizado local',costo:22},
+ {id:'brena',label:'Breña — motorizado local',costo:22}
 ];
 const coZonaSel=document.getElementById('coZona');
 coZonaSel.innerHTML=FLETES.map(f=>{const parts=f.label.split('—');const short=(parts[0]||f.label).trim();const detail=parts[1]?parts[1].trim():'';return `<option value="${f.id}" title="${f.label.replace(/"/g,'&quot;')}">${short} — S/ ${f.costo.toFixed(2)}${detail?' ('+detail.slice(0,42)+(detail.length>42?'…':'')+')':''}</option>`;}).join('');
