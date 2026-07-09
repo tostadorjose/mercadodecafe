@@ -280,6 +280,9 @@ section[id]{scroll-margin-top:84px}
   .nav-actions #loginBtn{display:inline-block;font-size:12.5px;padding:0}
   .nav-actions #userEmail{display:inline-block;max-width:110px}
   .nav-actions #logoutBtn{display:none}
+  /* "Crear cuenta" se oculta del header en móvil para no saturarlo: ya se llega a crear
+     cuenta desde el modal de "Iniciar sesión" (enlace "Crear cuenta" dentro del formulario). */
+  .nav-actions #signupBtn{display:none}
   .cart-panel{width:100%;max-width:100%}
 }
 @media(max-width:680px){
@@ -297,16 +300,12 @@ section[id]{scroll-margin-top:84px}
   .cart svg{width:18px;height:18px}
   .nav-actions .btn--sm{padding:7px 11px;font-size:11.5px}
 }
-/* En pantallas angostas el logo + carrito + Iniciar sesión + Crear cuenta + burger no caben
-   en una sola fila (se desbordaban del viewport, arrastrando también el botón fijo de WhatsApp
-   fuera de la pantalla). Línea 1: logo a la izquierda y burger alineado a la derecha (el
-   spacer empuja). Línea 2: carrito + Iniciar sesión + Crear cuenta, alineados a la derecha. */
+/* Respaldo defensivo: con "Crear cuenta" oculto, el logo + carrito + Iniciar sesión + burger
+   ya caben en una sola fila en cualquier celular real. Este flex-wrap solo entra en juego en
+   casos extremos (letra del sistema muy agrandada, pantallas fuera de lo común) para que el
+   contenido pase a una 2ª línea en vez de desbordarse y empujar el botón de WhatsApp fuera. */
 @media(max-width:520px){
-  .nav .wrap{flex-wrap:wrap;height:auto;padding:10px 16px}
-  .brand{order:1}
-  .nav-spacer{order:2}
-  .burger{order:3}
-  .nav-actions{order:4;flex-basis:100%;justify-content:flex-end}
+  .nav .wrap{flex-wrap:wrap;row-gap:6px;height:auto;padding:10px 16px}
 }
 @media(max-width:680px){
   .sec-head .btn{white-space:normal;width:100%;max-width:100%}
