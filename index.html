@@ -376,6 +376,10 @@ section[id]{scroll-margin-top:84px}
 .role-card:hover{border-color:var(--verde);transform:translateY(-2px)}
 .role-card h4{font-size:16px;margin-bottom:4px;color:var(--selva)}
 .role-card p{font-size:13px;color:var(--muted);margin:0}
+.auth-err{margin-top:12px;padding:10px 13px;border-radius:9px;background:#f6dcd4;border:1px solid var(--cereza);color:var(--cereza-dark,#7d2a1a);font-size:13.5px;font-weight:600}
+#authModal .field{margin-bottom:12px}#authModal .field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px}
+#authModal .field input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:9px;font-size:15px;background:#fff}
+#authModal .field input:focus{outline:none;border-color:var(--miel)}
 .up-box{border:2px dashed var(--grano);border-radius:14px;padding:26px 18px;text-align:center;color:var(--muted);cursor:pointer;background:var(--paper);transition:border-color .15s,background .15s;font-weight:600}
 .up-box:hover{border-color:var(--verde);background:#fff}
 .up-box.busy{opacity:.6;pointer-events:none}
@@ -906,6 +910,58 @@ section[id]{scroll-margin-top:84px}
   </div>
 </div></div>
 
+<!-- ACCESO: pantalla propia (login / crear cuenta por rol) -->
+<div class="modal" id="authModal" aria-hidden="true"><div class="modal-box" role="dialog" aria-modal="true">
+  <button class="modal-close" id="authModalClose" aria-label="Cerrar">×</button>
+
+  <div class="auth-view" id="authV_roles">
+    <h3>Crear tu cuenta</h3><p class="sub">Elige tu perfil para entrar directo a tu panel.</p>
+    <div class="role-cards">
+      <button class="role-card" data-arole="foodie"><h4>Cliente Foodie</h4><p>Compro café para disfrutarlo o para mi negocio (grano verde o tostado).</p></button>
+      <button class="role-card" data-arole="productor"><h4>Productor Cafetalero</h4><p>Cultivo café y quiero integrarme al canal.</p></button>
+      <button class="role-card" data-arole="marca"><h4>Marca Aliada</h4><p>Mi marca vende en consignación en la Tienda El Tostador.</p></button>
+    </div>
+    <p class="form-note" style="text-align:center;margin-top:14px">¿Ya tienes cuenta? <a href="#" id="toLogin1" style="font-weight:700;color:var(--selva)">Inicia sesión</a></p>
+  </div>
+
+  <div class="auth-view" id="authV_signup" style="display:none">
+    <h3>Crear tu cuenta</h3><p class="sub" id="authSignupRole" style="font-weight:700;color:var(--selva)"></p>
+    <form id="formSignup">
+      <div class="field"><label>Nombre completo</label><input name="nombre" autocomplete="name" required></div>
+      <div class="field"><label>Correo</label><input name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Contraseña (mínimo 6 caracteres)</label><input name="password" type="password" autocomplete="new-password" minlength="6" required></div>
+      <button class="btn btn--solid" type="submit" style="width:100%">Crear mi cuenta</button>
+      <div class="auth-err" id="signupErr" style="display:none"></div>
+    </form>
+    <p class="form-note" style="text-align:center;margin-top:12px"><a href="#" id="backRoles">← Cambiar perfil</a> · <a href="#" id="toLogin2">Ya tengo cuenta</a></p>
+  </div>
+
+  <div class="auth-view" id="authV_login" style="display:none">
+    <h3>Iniciar sesión</h3><p class="sub">Entra a tu panel según tu perfil.</p>
+    <form id="formLogin">
+      <div class="field"><label>Correo</label><input name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Contraseña</label><input name="password" type="password" autocomplete="current-password" required></div>
+      <button class="btn btn--solid" type="submit" style="width:100%">Entrar</button>
+      <div class="auth-err" id="loginErr" style="display:none"></div>
+    </form>
+    <p class="form-note" style="text-align:center;margin-top:12px"><a href="#" id="toSignup" style="font-weight:700;color:var(--selva)">Crear cuenta</a> · <a href="#" id="forgotPw">Olvidé mi contraseña</a></p>
+  </div>
+
+  <div class="auth-view" id="authV_recover" style="display:none">
+    <h3>Nueva contraseña</h3><p class="sub">Escribe tu nueva contraseña para tu cuenta.</p>
+    <form id="formRecover">
+      <div class="field"><label>Nueva contraseña (mínimo 6)</label><input name="password" type="password" autocomplete="new-password" minlength="6" required></div>
+      <button class="btn btn--solid" type="submit" style="width:100%">Guardar contraseña</button>
+      <div class="auth-err" id="recoverErr" style="display:none"></div>
+    </form>
+  </div>
+
+  <div class="auth-view" id="authV_msg" style="display:none">
+    <h3 id="authMsgTitle"></h3><p class="sub" id="authMsgText"></p>
+    <button class="btn btn--solid" style="width:100%" id="authMsgBtn">Entendido</button>
+  </div>
+</div></div>
+
 <div class="modal" id="coffeeModal" aria-hidden="true"><div class="modal-box modal-box--wide" role="dialog" aria-modal="true">
   <button class="modal-close" id="coffeeModalClose" aria-label="Cerrar">×</button>
   <div class="cd-head"><div><div class="eyebrow" id="cdRegion"></div><h3 id="cdName" style="font-size:26px"></h3></div><div class="tag" id="cdTag" style="margin-top:2px"></div></div>
@@ -954,8 +1010,7 @@ section[id]{scroll-margin-top:84px}
 
 <a class="wa" href="https://wa.me/51981586552" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.4A10 10 0 1 0 12 2zm5.8 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3s.7-2.1 1-2.4c.2-.3.5-.4.7-.4h.5c.2 0 .4 0 .6.5.2.5.7 1.8.8 1.9.1.1.1.3 0 .5-.1.2-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 .9.7 1.6 1 1.9 1.1.3.1.5.1.6-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.6-.1.2.1 1.5.7 1.7.8.2.1.4.2.4.3.1.1.1.5 0 1z"/></svg></a>
 
-<!-- El widget de Identity DEBE cargarse ANTES del script principal, para que los eventos de login/logout se registren. -->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<!-- Ya NO usamos el widget modal de Netlify Identity: la autenticación se hace con pantalla propia + API REST de GoTrue (/.netlify/identity). -->
 
 <div class="modal" id="checkoutModal" aria-hidden="true"><div class="modal-box" role="dialog" aria-modal="true">
   <button class="modal-close" id="checkoutModalClose" aria-label="Cerrar">×</button>
@@ -1301,25 +1356,58 @@ function showPage(k){document.getElementById('home').style.display='none';docume
 function goHome(){document.querySelectorAll('.subpage').forEach(s=>s.classList.remove('active'));document.getElementById('home').style.display='block';if(typeof stopAcctTimer==='function')stopAcctTimer();}
 function route(){const h=location.hash.replace('#','');if(PAGES[h]){showPage(h);return;}goHome();if(h===''||h==='home'||h==='top')window.scrollTo(0,0);}
 window.addEventListener('hashchange',route);
-/* Al abrir www.mercadodecafe.com siempre se empieza en la página inicial (arriba),
-   ignorando cualquier #hash que haya quedado en la URL. La navegación interna sigue normal. */
-if(location.hash){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}}
-goHome();window.scrollTo(0,0);
+/* Si el hash trae un token de correo (#confirmation_token / #recovery_token), NO reseteamos a
+   portada aquí; lo procesa handleAuthHash() al final de la sección de acceso. */
+var HAS_AUTH_HASH=/(confirmation_token|recovery_token|invite_token)=/.test(location.hash||'');
+if(!HAS_AUTH_HASH){
+ /* Al abrir www.mercadodecafe.com siempre se empieza en la página inicial (arriba),
+    ignorando cualquier #hash que haya quedado en la URL. La navegación interna sigue normal. */
+ if(location.hash){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}}
+ goHome();window.scrollTo(0,0);
+}
 
-/* ================= AUTH (Netlify Identity — real) ================= */
-var CURRENT_USER=null,CURRENT_ROLE=null,ROLE_PROMPTED=false;
+/* ================= AUTH (Netlify Identity vía API GoTrue — pantalla propia) =================
+   Reemplazamos el widget modal de Netlify (que renderizaba de forma poco fiable) por una
+   pantalla de acceso propia + la API REST oficial de Identity. Control total y sin iframes. */
+var CURRENT_USER=null,CURRENT_ROLE=null;
 var ROLE_LABELS={foodie:'acct_role_foodie',productor:'acct_role_productor',marca:'acct_role_marca'};
+var ROLE_NAMES={foodie:'Cliente Foodie',productor:'Productor Cafetalero',marca:'Marca Aliada'};
+var ID_URL=((location.origin&&location.origin.indexOf('http')===0)?location.origin:'https://www.mercadodecafe.com')+'/.netlify/identity';
+var SESS_KEY='mdc_session';
 function pendingRole(){try{return localStorage.getItem('mdc_pending_role');}catch(e){return null;}}
 function clearPendingRole(){try{localStorage.removeItem('mdc_pending_role');}catch(e){}}
+function saveSession(s){try{localStorage.setItem(SESS_KEY,JSON.stringify(s));}catch(e){}}
+function loadSession(){try{return JSON.parse(localStorage.getItem(SESS_KEY));}catch(e){return null;}}
+function clearSession(){try{localStorage.removeItem(SESS_KEY);}catch(e){}}
+function displayName(user){if(!user)return'';const md=user.user_metadata||{};return md.full_name||user.email.split('@')[0];}
 function openRoleModal(){roleModal.classList.add('open');roleModal.setAttribute('aria-hidden','false');}
 function closeRoleModal(){roleModal.classList.remove('open');roleModal.setAttribute('aria-hidden','true');}
-function displayName(user){if(!user)return'';const md=user.user_metadata||{};return md.full_name||user.email.split('@')[0];}
+
+/* --- API GoTrue (REST, sin dependencias) --- */
+async function apiFetch(path,opts){
+ const r=await fetch(ID_URL+path,opts);let d=null;try{d=await r.json();}catch(e){}
+ if(!r.ok){const msg=(d&&(d.error_description||d.msg||d.error))||('Error '+r.status);const err=new Error(msg);err.code=r.status;err.data=d;throw err;}
+ return d;
+}
+function apiLogin(email,password){const b=new URLSearchParams();b.set('grant_type','password');b.set('username',email);b.set('password',password);return apiFetch('/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:b.toString()});}
+function apiSignup(email,password,data){return apiFetch('/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,password:password,data:data||{}})});}
+function apiGetUser(token){return apiFetch('/user',{headers:{Authorization:'Bearer '+token}});}
+function apiUpdateUser(token,payload){return apiFetch('/user',{method:'PUT',headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify(payload)});}
+function apiRefresh(rt){const b=new URLSearchParams();b.set('grant_type','refresh_token');b.set('refresh_token',rt);return apiFetch('/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:b.toString()});}
+function apiVerify(type,token){return apiFetch('/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:type,token:token})});}
+function apiRecover(email){return apiFetch('/recover',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})});}
+
+/* --- Sesión persistente (localStorage) --- */
+function sessionFrom(tok,user){return {access_token:tok.access_token,refresh_token:tok.refresh_token,expires_at:Date.now()+((tok.expires_in||3600)*1000),user:user};}
+function makeUser(raw){return {email:raw.email,user_metadata:raw.user_metadata||{},app_metadata:raw.app_metadata||{},
+ update:async function(obj){const s=await ensureToken();if(!s)throw new Error('no-session');const up=await apiUpdateUser(s.access_token,{data:(obj&&obj.data)||{}});s.user=up;saveSession(s);return makeUser(up);}};}
+async function ensureToken(){let s=loadSession();if(!s)return null;
+ if(Date.now()>s.expires_at-60000){try{const tok=await apiRefresh(s.refresh_token);s.access_token=tok.access_token;if(tok.refresh_token)s.refresh_token=tok.refresh_token;s.expires_at=Date.now()+((tok.expires_in||3600)*1000);saveSession(s);}catch(e){clearSession();return null;}}
+ return s;
+}
 function updateAuthUI(user){
  CURRENT_USER=user||null;
  CURRENT_ROLE=(user&&user.user_metadata&&user.user_metadata.role)||null;
- /* NO abrimos el roleModal aquí — se dispara en cada init de Identity y quedaba
-    apareciendo al entrar a la portada. El rol se pide solo al crear cuenta o
-    explícitamente desde el botón "Cambiar rol" del panel. */
  const logged=!!user;
  document.body.classList.toggle('logged-in',logged);
  document.querySelectorAll('.auth-guest').forEach(el=>el.style.display=logged?'none':'contents');
@@ -1328,46 +1416,134 @@ function updateAuthUI(user){
  if(ue&&user){ue.textContent=displayName(user);ue.title=user.email;}
  if(document.getElementById('page-cuenta')&&document.getElementById('page-cuenta').classList.contains('active'))loadAccountPage();
 }
-function afterLogin(user){
- if(window.netlifyIdentity)netlifyIdentity.close();
- const pend=pendingRole();
- const done=u=>{clearPendingRole();updateAuthUI(u);location.hash='cuenta';};
- if(pend&&!(user.user_metadata&&user.user_metadata.role)){
-  user.update({data:{role:pend}}).then(done).catch(()=>done(user));
- }else done(user);
+async function restoreSession(){
+ const s=await ensureToken();
+ if(!s){updateAuthUI(null);return;}
+ try{const raw=await apiGetUser(s.access_token);s.user=raw;saveSession(s);updateAuthUI(makeUser(raw));}
+ catch(e){clearSession();updateAuthUI(null);}
 }
-function afterSignup(user){
- /* Registro nuevo: guardamos en el Sheet (pestaña "Cuentas") para que aparezca en el dashboard */
- const pend=pendingRole();
- sendToSheet({type:'cuenta_nueva',email:user.email,nombre:(user.user_metadata&&user.user_metadata.full_name)||'',rol:pend||''});
+/* --- Acciones --- */
+async function doLogin(email,password){
+ const tok=await apiLogin(email,password);
+ const raw=await apiGetUser(tok.access_token);
+ saveSession(sessionFrom(tok,raw));
+ const u=makeUser(raw);updateAuthUI(u);return u;
 }
-let IDENTITY_ERROR=false,IDENTITY_READY=false;
-/* El widget de Netlify Identity define window.netlifyIdentity en DOMContentLoaded, no al
-   descargar su <script>. Así que puede que aún no exista cuando este código corre. */
-function setupIdentity(){
- if(!window.netlifyIdentity){setTimeout(setupIdentity,60);return;}
- if(IDENTITY_READY)return;IDENTITY_READY=true;
- netlifyIdentity.on('init',user=>updateAuthUI(user));
- netlifyIdentity.on('signup',afterSignup);
- netlifyIdentity.on('login',afterLogin);
- netlifyIdentity.on('logout',()=>{updateAuthUI(null);try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}goHome();window.scrollTo(0,0);});
- netlifyIdentity.on('close',()=>updateAuthUI(netlifyIdentity.currentUser()));
- netlifyIdentity.on('error',err=>{IDENTITY_ERROR=true;console.warn('Netlify Identity error:',err);});
- netlifyIdentity.init();
- updateAuthUI(netlifyIdentity.currentUser());
+async function doSignup(name,email,password,role){
+ await apiSignup(email,password,{full_name:name,role:role});
+ sendToSheet({type:'cuenta_nueva',email:email,nombre:name||'',rol:role||''});
+ try{await doLogin(email,password);return {confirmed:true};}
+ catch(e){return {confirmed:false};}
 }
-setupIdentity();
-function tryOpenIdentity(mode){
- if(window.netlifyIdentity){netlifyIdentity.open(mode);return;}
- /* Widget aún cargando: esperar hasta 3 s y reintentar. */
- let tries=0;const wait=setInterval(()=>{tries++;
-  if(window.netlifyIdentity){clearInterval(wait);setupIdentity();netlifyIdentity.open(mode);}
-  else if(tries>50){clearInterval(wait);alert('No se pudo abrir el acceso de usuarios. Revisa tu conexión y recarga la página.');}
- },60);
+function doLogout(){
+ clearSession();updateAuthUI(null);
+ const nav=document.getElementById('nav');nav&&nav.classList.remove('open');
+ try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}
+ goHome();window.scrollTo(0,0);
 }
-['loginBtn'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}tryOpenIdentity('login');});});
-['signupBtn','signupBtn2','loginBtn2'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}openRoleModal();});});
-['logoutBtn','logoutBtnMobile'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('click',e=>{e.preventDefault();const nav=document.getElementById('nav');nav&&nav.classList.remove('open');window.netlifyIdentity&&netlifyIdentity.logout();});});
+
+/* --- Modal de acceso propio --- */
+const authModal=document.getElementById('authModal');
+let signupRole='foodie';
+function showAuthView(v){
+ ['roles','signup','login','msg','recover'].forEach(k=>{const el=document.getElementById('authV_'+k);if(el)el.style.display=(k===v)?'block':'none';});
+}
+function clearAuthErr(){['signupErr','loginErr','recoverErr'].forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='none';el.textContent='';}});}
+function showAuthErr(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.style.display='block';}}
+function openAuthModal(v){
+ if(CURRENT_USER){location.hash='cuenta';return;}
+ clearAuthErr();showAuthView(v||'login');
+ authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');
+}
+function closeAuthModal(){authModal.classList.remove('open');authModal.setAttribute('aria-hidden','true');}
+function showAuthMsg(title,text){document.getElementById('authMsgTitle').textContent=title;document.getElementById('authMsgText').textContent=text;showAuthView('msg');}
+if(authModal){
+ authModal.addEventListener('click',e=>{if(e.target===authModal)closeAuthModal();});
+ document.getElementById('authModalClose').addEventListener('click',closeAuthModal);
+ document.querySelectorAll('#authV_roles .role-card').forEach(b=>b.addEventListener('click',()=>{
+  signupRole=b.dataset.arole;document.getElementById('authSignupRole').textContent='Perfil elegido: '+(ROLE_NAMES[signupRole]||signupRole);
+  clearAuthErr();showAuthView('signup');
+ }));
+ document.getElementById('toLogin1').addEventListener('click',e=>{e.preventDefault();clearAuthErr();showAuthView('login');});
+ document.getElementById('toLogin2').addEventListener('click',e=>{e.preventDefault();clearAuthErr();showAuthView('login');});
+ document.getElementById('backRoles').addEventListener('click',e=>{e.preventDefault();clearAuthErr();showAuthView('roles');});
+ document.getElementById('toSignup').addEventListener('click',e=>{e.preventDefault();clearAuthErr();showAuthView('roles');});
+ document.getElementById('authMsgBtn').addEventListener('click',()=>{closeAuthModal();});
+ /* Registro */
+ document.getElementById('formSignup').addEventListener('submit',async e=>{e.preventDefault();clearAuthErr();
+  const f=e.target,btn=f.querySelector('button[type=submit]'),orig=btn.textContent;
+  btn.disabled=true;btn.textContent='Creando…';
+  try{
+   const res=await doSignup(f.nombre.value.trim(),f.email.value.trim(),f.password.value,signupRole);
+   if(res.confirmed){closeAuthModal();location.hash='cuenta';}
+   else{showAuthMsg('¡Casi listo! Revisa tu correo',' Te enviamos un enlace de confirmación a '+f.email.value.trim()+'. Ábrelo para activar tu cuenta y luego inicia sesión.');}
+   f.reset();
+  }catch(err){showAuthErr('signupErr',traducirError(err.message));}
+  btn.disabled=false;btn.textContent=orig;
+ });
+ /* Login */
+ document.getElementById('formLogin').addEventListener('submit',async e=>{e.preventDefault();clearAuthErr();
+  const f=e.target,btn=f.querySelector('button[type=submit]'),orig=btn.textContent;
+  btn.disabled=true;btn.textContent='Entrando…';
+  try{await doLogin(f.email.value.trim(),f.password.value);closeAuthModal();location.hash='cuenta';f.reset();}
+  catch(err){showAuthErr('loginErr',traducirError(err.message));}
+  btn.disabled=false;btn.textContent=orig;
+ });
+ /* Olvidé mi contraseña */
+ document.getElementById('forgotPw').addEventListener('click',async e=>{e.preventDefault();clearAuthErr();
+  const email=(document.getElementById('formLogin').email.value||'').trim();
+  if(!email){showAuthErr('loginErr','Escribe tu correo arriba y vuelve a pulsar "Olvidé mi contraseña".');return;}
+  try{await apiRecover(email);showAuthMsg('Revisa tu correo','Te enviamos un enlace para restablecer tu contraseña a '+email+'.');}
+  catch(err){showAuthErr('loginErr',traducirError(err.message));}
+ });
+ /* Fijar nueva contraseña (tras enlace de recuperación) */
+ document.getElementById('formRecover').addEventListener('submit',async e=>{e.preventDefault();clearAuthErr();
+  const f=e.target,btn=f.querySelector('button[type=submit]');btn.disabled=true;
+  try{const s=await ensureToken();if(!s)throw new Error('Sesión expirada, vuelve a solicitar el enlace.');
+   const up=await apiUpdateUser(s.access_token,{password:f.password.value});s.user=up;saveSession(s);
+   updateAuthUI(makeUser(up));closeAuthModal();location.hash='cuenta';}
+  catch(err){showAuthErr('recoverErr',traducirError(err.message));}
+  btn.disabled=false;
+ });
+}
+function traducirError(m){
+ m=String(m||'');
+ if(/No user found|invalid|Invalid/i.test(m))return'Correo o contraseña incorrectos.';
+ if(/Email not confirmed|not confirmed/i.test(m))return'Tu cuenta aún no está confirmada. Revisa tu correo y abre el enlace de confirmación.';
+ if(/already (been )?registered|already exists|duplicate/i.test(m))return'Ese correo ya tiene una cuenta. Inicia sesión.';
+ if(/valid password|Password/i.test(m))return'La contraseña debe tener al menos 6 caracteres.';
+ if(/rate limit/i.test(m))return'Demasiados intentos. Espera un momento e intenta de nuevo.';
+ return m;
+}
+/* Enlaces de confirmación / recuperación que llegan por correo (#confirmation_token / #recovery_token) */
+async function handleAuthHash(){
+ const h=location.hash||'';let m;
+ if((m=h.match(/confirmation_token=([^&]+)/))){
+  try{const tok=await apiVerify('signup',m[1]);const raw=await apiGetUser(tok.access_token);saveSession(sessionFrom(tok,raw));updateAuthUI(makeUser(raw));
+   try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+   openAuthModalDone('¡Cuenta confirmada!','Tu cuenta quedó activa. Ya estás dentro.');location.hash='cuenta';}
+  catch(e){}
+  return true;
+ }
+ if((m=h.match(/recovery_token=([^&]+)/))){
+  try{const tok=await apiVerify('recovery',m[1]);const raw=await apiGetUser(tok.access_token);saveSession(sessionFrom(tok,raw));updateAuthUI(makeUser(raw));
+   try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+   clearAuthErr();showAuthView('recover');authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');}
+  catch(e){}
+  return true;
+ }
+ return false;
+}
+function openAuthModalDone(title,text){/* muestra un aviso breve reutilizando el modal si está disponible */
+ if(!authModal)return;showAuthMsg(title,text);authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');
+}
+/* Botones */
+['loginBtn'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}openAuthModal('login');});});
+['signupBtn','signupBtn2','loginBtn2'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}openAuthModal('roles');});});
+['logoutBtn','logoutBtnMobile'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('click',e=>{e.preventDefault();doLogout();});});
+/* Restaurar sesión al cargar; si el hash trae un token de correo, procesarlo. */
+if(typeof HAS_AUTH_HASH!=='undefined'&&HAS_AUTH_HASH){handleAuthHash();}
+restoreSession();
 
 /* ================= MI CUENTA (historial real vía Google Sheets) ================= */
 function statusPillClass(status){
@@ -1477,17 +1653,12 @@ function renderMarca(data){
  document.getElementById('marcaDirecciones').innerHTML=dirs.length?dirs.map(x=>`<div class="acct-row"><div class="ar-main"><div class="ar-title">${x['Etiqueta']||'Dirección'}</div><div class="ar-meta">${[x['Dirección']||x['Direccion']||'',x['Ciudad']||'',x['País']||x['Pais']||''].filter(Boolean).join(' · ')}</div>${x['Notas']?`<div class="ar-meta">${x['Notas']}</div>`:''}</div></div>`).join(''):`<div class="acct-empty">${t('acct_empty')}</div>`;
  renderFacturas('marcaFacturas',data['Facturas']);
 }
-/* role modal */
+/* role modal — SOLO para cambiar el rol de un usuario ya logueado (botón "Cambiar rol") */
 roleModalClose.addEventListener('click',closeRoleModal);
 roleModal.addEventListener('click',e=>{if(e.target===roleModal)closeRoleModal();});
-document.querySelectorAll('.role-card').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('#roleModal .role-card').forEach(b=>b.addEventListener('click',()=>{
  const role=b.dataset.role;
- if(!CURRENT_USER){
-  try{localStorage.setItem('mdc_pending_role',role);}catch(e){}
-  closeRoleModal();
-  tryOpenIdentity('signup');
-  return;
- }
+ if(!CURRENT_USER){closeRoleModal();openAuthModal('roles');return;}
  b.disabled=true;
  CURRENT_USER.update({data:{role:role}}).then(u=>{b.disabled=false;closeRoleModal();updateAuthUI(u);location.hash='cuenta';if(document.getElementById('page-cuenta').classList.contains('active'))loadAccountPage();}).catch(()=>{b.disabled=false;});
 }));
