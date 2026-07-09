@@ -299,11 +299,14 @@ section[id]{scroll-margin-top:84px}
 }
 /* En pantallas angostas el logo + carrito + Iniciar sesión + Crear cuenta + burger no caben
    en una sola fila (se desbordaban del viewport, arrastrando también el botón fijo de WhatsApp
-   fuera de la pantalla). Con flex-wrap el header pasa a 2 líneas en vez de desbordarse. */
+   fuera de la pantalla). Línea 1: logo a la izquierda y burger alineado a la derecha (el
+   spacer empuja). Línea 2: carrito + Iniciar sesión + Crear cuenta, alineados a la derecha. */
 @media(max-width:520px){
   .nav .wrap{flex-wrap:wrap;height:auto;padding:10px 16px}
-  .nav-spacer{flex-basis:100%;height:0}
-  .nav-actions{flex:1 1 auto;justify-content:flex-end}
+  .brand{order:1}
+  .nav-spacer{order:2}
+  .burger{order:3}
+  .nav-actions{order:4;flex-basis:100%;justify-content:flex-end}
 }
 @media(max-width:680px){
   .sec-head .btn{white-space:normal;width:100%;max-width:100%}
@@ -466,8 +469,8 @@ section[id]{scroll-margin-top:84px}
       <a class="linklike" href="#cuenta" id="userEmail" title="Mi cuenta" style="font-weight:700;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></a>
       <button class="btn btn--sm" id="logoutBtn" data-i18n="acct_logout">Cerrar sesión</button>
     </span>
-    <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
   </div>
+  <button class="burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
 </div></header>
 
 <main id="home">
