@@ -222,13 +222,14 @@ function tableOrEmpty(headers, rowCells){
 }
 
 /* ====== USERS ====== */
-const USER_TABS=[{id:'productores',label:'Productores'},{id:'marcas',label:'Marcas'},{id:'compradores',label:'Compradores'}];
-let userTab='productores';
+const USER_TABS=[{id:'cuentas',label:'Cuentas nuevas'},{id:'productores',label:'Productores'},{id:'marcas',label:'Marcas'},{id:'compradores',label:'Compradores'}];
+let userTab='cuentas';
 function renderUsers(){
   document.getElementById('userTabs').innerHTML = USER_TABS.map(x=>{const n=(DASH.usuarios[x.id]||[]).length;return `<button class="tab ${x.id===userTab?'on':''}" data-ut="${x.id}">${x.label} (${n})</button>`;}).join('');
   document.querySelectorAll('[data-ut]').forEach(b=>b.onclick=()=>{userTab=b.dataset.ut;renderUsers();});
   const rows=DASH.usuarios[userTab]||[]; let html='';
-  if(userTab==='productores') html=tableOrEmpty(['Nombre / Finca','Región','Volumen','Variedad','Contacto','Fecha'], rows.map(r=>`<td>${esc(r.nombre)}</td><td>${esc(r.region)}</td><td>${esc(r.volumen)}</td><td>${esc(r.variedad)}</td><td>${esc(r.contacto)}</td><td>${fmtDate(r.fecha)}</td>`));
+  if(userTab==='cuentas') html=tableOrEmpty(['Correo','Nombre','Rol','Fecha'], rows.map(r=>`<td>${esc(r.correo)}</td><td>${esc(r.nombre)}</td><td>${esc(r.rol||'—')}</td><td>${fmtDate(r.fecha)}</td>`));
+  else if(userTab==='productores') html=tableOrEmpty(['Nombre / Finca','Región','Volumen','Variedad','Contacto','Fecha'], rows.map(r=>`<td>${esc(r.nombre)}</td><td>${esc(r.region)}</td><td>${esc(r.volumen)}</td><td>${esc(r.variedad)}</td><td>${esc(r.contacto)}</td><td>${fmtDate(r.fecha)}</td>`));
   else if(userTab==='marcas') html=tableOrEmpty(['Marca','Origen','Presentación','Contacto','Fecha'], rows.map(r=>`<td>${esc(r.marca)}</td><td>${esc(r.origen)}</td><td>${esc(r.presentacion)}</td><td>${esc(r.contacto)}</td><td>${fmtDate(r.fecha)}</td>`));
   else html=tableOrEmpty(['Correo','Nombre','País','Región'], rows.map(r=>`<td>${esc(r.correo)}</td><td>${esc(r.nombre)}</td><td>${esc(r.pais)}</td><td>${esc(r.region)}</td>`));
   document.getElementById('userTable').innerHTML=html;

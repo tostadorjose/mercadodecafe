@@ -276,7 +276,8 @@ section[id]{scroll-margin-top:84px}
   .store-grid{grid-template-columns:repeat(2,1fr)}
   .footer .grid-f{grid-template-columns:1fr;gap:26px}
   .foot-bottom{flex-direction:column;gap:8px}
-  .nav-actions .linklike{display:none}
+  /* Botón "Iniciar sesión" en móvil: visible pero compacto (antes se ocultaba y solo quedaba "Crear cuenta") */
+  .nav-actions #loginBtn{display:inline-block;font-size:12.5px;padding:0}
   .nav-actions #userEmail{display:inline-block;max-width:110px}
   .nav-actions #logoutBtn{display:none}
   .cart-panel{width:100%;max-width:100%}
@@ -1316,7 +1317,9 @@ function displayName(user){if(!user)return'';const md=user.user_metadata||{};ret
 function updateAuthUI(user){
  CURRENT_USER=user||null;
  CURRENT_ROLE=(user&&user.user_metadata&&user.user_metadata.role)||null;
- if(user&&!CURRENT_ROLE&&!pendingRole()&&!ROLE_PROMPTED){ROLE_PROMPTED=true;setTimeout(openRoleModal,400);}
+ /* NO abrimos el roleModal aquí — se dispara en cada init de Identity y quedaba
+    apareciendo al entrar a la portada. El rol se pide solo al crear cuenta o
+    explícitamente desde el botón "Cambiar rol" del panel. */
  const logged=!!user;
  document.body.classList.toggle('logged-in',logged);
  document.querySelectorAll('.auth-guest').forEach(el=>el.style.display=logged?'none':'contents');
@@ -1333,6 +1336,11 @@ function afterLogin(user){
   user.update({data:{role:pend}}).then(done).catch(()=>done(user));
  }else done(user);
 }
+function afterSignup(user){
+ /* Registro nuevo: guardamos en el Sheet (pestaña "Cuentas") para que aparezca en el dashboard */
+ const pend=pendingRole();
+ sendToSheet({type:'cuenta_nueva',email:user.email,nombre:(user.user_metadata&&user.user_metadata.full_name)||'',rol:pend||''});
+}
 let IDENTITY_ERROR=false,IDENTITY_READY=false;
 /* El widget de Netlify Identity define window.netlifyIdentity en DOMContentLoaded, no al
    descargar su <script>. Así que puede que aún no exista cuando este código corre. */
@@ -1340,6 +1348,7 @@ function setupIdentity(){
  if(!window.netlifyIdentity){setTimeout(setupIdentity,60);return;}
  if(IDENTITY_READY)return;IDENTITY_READY=true;
  netlifyIdentity.on('init',user=>updateAuthUI(user));
+ netlifyIdentity.on('signup',afterSignup);
  netlifyIdentity.on('login',afterLogin);
  netlifyIdentity.on('logout',()=>{updateAuthUI(null);try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}goHome();window.scrollTo(0,0);});
  netlifyIdentity.on('close',()=>updateAuthUI(netlifyIdentity.currentUser()));
