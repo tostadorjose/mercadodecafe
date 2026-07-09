@@ -377,6 +377,11 @@ section[id]{scroll-margin-top:84px}
 .role-card h4{font-size:16px;margin-bottom:4px;color:var(--selva)}
 .role-card p{font-size:13px;color:var(--muted);margin:0}
 .auth-err{margin-top:12px;padding:10px 13px;border-radius:9px;background:#f6dcd4;border:1px solid var(--cereza);color:var(--cereza-dark,#7d2a1a);font-size:13.5px;font-weight:600}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:16px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:#3c4043;font-family:inherit;font-weight:700;font-size:14.5px;cursor:pointer;transition:background .15s,border-color .15s}
+.btn-google:hover{background:#f7f5ef;border-color:#c9c2b0}
+.btn-google svg{width:18px;height:18px;flex:0 0 auto}
+.auth-or{display:flex;align-items:center;gap:12px;margin:16px 0 4px;color:var(--muted);font-size:12px}
+.auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:var(--line)}
 #authModal .field{margin-bottom:12px}#authModal .field label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:5px}
 #authModal .field input{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:9px;font-size:15px;background:#fff}
 #authModal .field input:focus{outline:none;border-color:var(--miel)}
@@ -926,6 +931,8 @@ section[id]{scroll-margin-top:84px}
 
   <div class="auth-view" id="authV_signup" style="display:none">
     <h3>Crear tu cuenta</h3><p class="sub" id="authSignupRole" style="font-weight:700;color:var(--selva)"></p>
+    <button type="button" class="btn-google" id="googleSignupBtn"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.71-1.57 2.68-3.89 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A8.99 8.99 0 0 0 9 0 9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>Continuar con Google</button>
+    <div class="auth-or"><span>o con tu correo</span></div>
     <form id="formSignup">
       <div class="field"><label>Nombre completo</label><input name="nombre" autocomplete="name" required></div>
       <div class="field"><label>Correo</label><input name="email" type="email" autocomplete="email" required></div>
@@ -938,6 +945,8 @@ section[id]{scroll-margin-top:84px}
 
   <div class="auth-view" id="authV_login" style="display:none">
     <h3>Iniciar sesión</h3><p class="sub">Entra a tu panel según tu perfil.</p>
+    <button type="button" class="btn-google" id="googleLoginBtn"><svg viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.71-1.57 2.68-3.89 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A8.99 8.99 0 0 0 9 0 9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg>Continuar con Google</button>
+    <div class="auth-or"><span>o con tu correo</span></div>
     <form id="formLogin">
       <div class="field"><label>Correo</label><input name="email" type="email" autocomplete="email" required></div>
       <div class="field"><label>Contraseña</label><input name="password" type="password" autocomplete="current-password" required></div>
@@ -1358,7 +1367,7 @@ function route(){const h=location.hash.replace('#','');if(PAGES[h]){showPage(h);
 window.addEventListener('hashchange',route);
 /* Si el hash trae un token de correo (#confirmation_token / #recovery_token), NO reseteamos a
    portada aquí; lo procesa handleAuthHash() al final de la sección de acceso. */
-var HAS_AUTH_HASH=/(confirmation_token|recovery_token|invite_token)=/.test(location.hash||'');
+var HAS_AUTH_HASH=/(confirmation_token|recovery_token|invite_token|access_token|error_description)=/.test(location.hash||'');
 if(!HAS_AUTH_HASH){
  /* Al abrir www.mercadodecafe.com siempre se empieza en la página inicial (arriba),
     ignorando cualquier #hash que haya quedado en la URL. La navegación interna sigue normal. */
@@ -1489,6 +1498,13 @@ if(authModal){
   catch(err){showAuthErr('loginErr',traducirError(err.message));}
   btn.disabled=false;btn.textContent=orig;
  });
+ /* Continuar con Google (OAuth de Netlify Identity) */
+ function loginWithGoogle(fromSignup){
+  try{if(fromSignup&&signupRole)localStorage.setItem('mdc_pending_role',signupRole);else clearPendingRole();}catch(e){}
+  window.location.href=ID_URL+'/authorize?provider=google';
+ }
+ const gL=document.getElementById('googleLoginBtn');if(gL)gL.addEventListener('click',()=>loginWithGoogle(false));
+ const gS=document.getElementById('googleSignupBtn');if(gS)gS.addEventListener('click',()=>loginWithGoogle(true));
  /* Olvidé mi contraseña */
  document.getElementById('forgotPw').addEventListener('click',async e=>{e.preventDefault();clearAuthErr();
   const email=(document.getElementById('formLogin').email.value||'').trim();
@@ -1515,9 +1531,32 @@ function traducirError(m){
  if(/rate limit/i.test(m))return'Demasiados intentos. Espera un momento e intenta de nuevo.';
  return m;
 }
-/* Enlaces de confirmación / recuperación que llegan por correo (#confirmation_token / #recovery_token) */
+/* Enlaces de correo (#confirmation_token / #recovery_token) y retorno de Google (#access_token) */
 async function handleAuthHash(){
  const h=location.hash||'';let m;
+ /* Retorno de login con Google (u otro proveedor): Netlify devuelve los tokens en el hash */
+ if(h.indexOf('access_token=')>=0){
+  const p={};h.replace(/^#/,'').split('&').forEach(kv=>{const i=kv.indexOf('=');if(i>0)p[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1));});
+  try{
+   const tok={access_token:p.access_token,refresh_token:p.refresh_token,expires_in:parseInt(p.expires_in||'3600',10)};
+   const raw=await apiGetUser(tok.access_token);
+   let user=raw,session=sessionFrom(tok,raw);saveSession(session);
+   /* Si eligió un rol antes de ir a Google, aplicarlo; si no tiene rol, pedirlo */
+   const pend=pendingRole();
+   try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+   if(!(raw.user_metadata&&raw.user_metadata.role)){
+    if(pend){const uu=makeUser(raw);const updated=await uu.update({data:{role:pend}});clearPendingRole();updateAuthUI(updated);location.hash='cuenta';}
+    else{updateAuthUI(makeUser(raw));openRoleModal();}
+   }else{clearPendingRole();updateAuthUI(makeUser(raw));location.hash='cuenta';}
+  }catch(e){}
+  return true;
+ }
+ if(h.indexOf('error_description=')>=0){
+  const md=h.match(/error_description=([^&]+)/);
+  openAuthModalDone('No se pudo continuar',md?decodeURIComponent(md[1].replace(/\+/g,' ')):'Inténtalo de nuevo.');
+  try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  return true;
+ }
  if((m=h.match(/confirmation_token=([^&]+)/))){
   try{const tok=await apiVerify('signup',m[1]);const raw=await apiGetUser(tok.access_token);saveSession(sessionFrom(tok,raw));updateAuthUI(makeUser(raw));
    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
