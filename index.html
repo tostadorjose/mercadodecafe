@@ -1876,11 +1876,10 @@ function initLang(){
 langSel.addEventListener('change',()=>{try{localStorage.setItem('mdc_lang',langSel.value);}catch(e){}setLang(langSel.value);});
 initLang();
 </script>
-<!-- ⚠️ IZIPAY: el valor de kr-public-key DEBE ser la "Clave pública de test" (o de producción) de TU tienda
-     Mercadodecafeperu (50298228). Verifícala en: Back Office Vendedor → Configuración → Tienda → pestaña
-     "Claves de API REST" → "Clave pública de test". Debe empezar con "50298228:testpublickey_..."
-     (o "50298228:publickey_..." cuando pases a producción, cambiando también las variables en Netlify). -->
-<script type="text/javascript" src="https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js" kr-public-key="50298228:testpublickey_jQw60L3iRjWxHFkx4ClcII9fryDz9iEBjJDt1T298CJLh" kr-post-url-success="" kr-language="es-PE"></script>
+<!-- ⚠️ IZIPAY EN PRODUCCIÓN: kr-public-key es la Clave pública de PRODUCCIÓN de la tienda
+     Mercadodecafeperu (50298228). Para volver a modo test, cambia esto por la Clave pública
+     de test y las variables IZIPAY_USERNAME/IZIPAY_PASSWORD en Netlify por las de test. -->
+<script type="text/javascript" src="https://static.micuentaweb.pe/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js" kr-public-key="50298228:publickey_29iieFb2kcmvdnVPbEgLBX5B13nAe2RGFmluwPobnZ1D8" kr-post-url-success="" kr-language="es-PE"></script>
 <link rel="stylesheet" href="https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic-reset.min.css">
 <script type="text/javascript" src="https://static.micuentaweb.pe/static/js/krypton-client/V4.0/ext/classic.js"></script>
 </body>
