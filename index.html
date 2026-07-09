@@ -1333,19 +1333,28 @@ function afterLogin(user){
   user.update({data:{role:pend}}).then(done).catch(()=>done(user));
  }else done(user);
 }
-let IDENTITY_ERROR=false;
-if(window.netlifyIdentity){
+let IDENTITY_ERROR=false,IDENTITY_READY=false;
+/* El widget de Netlify Identity define window.netlifyIdentity en DOMContentLoaded, no al
+   descargar su <script>. Así que puede que aún no exista cuando este código corre. */
+function setupIdentity(){
+ if(!window.netlifyIdentity){setTimeout(setupIdentity,60);return;}
+ if(IDENTITY_READY)return;IDENTITY_READY=true;
  netlifyIdentity.on('init',user=>updateAuthUI(user));
  netlifyIdentity.on('login',afterLogin);
- netlifyIdentity.on('logout',()=>{updateAuthUI(null);location.hash='home';});
+ netlifyIdentity.on('logout',()=>{updateAuthUI(null);try{history.replaceState(null,'',location.pathname+location.search);}catch(e){location.hash='';}goHome();window.scrollTo(0,0);});
  netlifyIdentity.on('close',()=>updateAuthUI(netlifyIdentity.currentUser()));
  netlifyIdentity.on('error',err=>{IDENTITY_ERROR=true;console.warn('Netlify Identity error:',err);});
  netlifyIdentity.init();
  updateAuthUI(netlifyIdentity.currentUser());
 }
+setupIdentity();
 function tryOpenIdentity(mode){
- if(!window.netlifyIdentity){alert('El acceso de usuarios se activa en el panel de Netlify (Identity). Escríbenos por WhatsApp mientras tanto.');return;}
- netlifyIdentity.open(mode);
+ if(window.netlifyIdentity){netlifyIdentity.open(mode);return;}
+ /* Widget aún cargando: esperar hasta 3 s y reintentar. */
+ let tries=0;const wait=setInterval(()=>{tries++;
+  if(window.netlifyIdentity){clearInterval(wait);setupIdentity();netlifyIdentity.open(mode);}
+  else if(tries>50){clearInterval(wait);alert('No se pudo abrir el acceso de usuarios. Revisa tu conexión y recarga la página.');}
+ },60);
 }
 ['loginBtn'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}tryOpenIdentity('login');});});
 ['signupBtn','signupBtn2','loginBtn2'].forEach(id=>{const el=document.getElementById(id);el&&el.addEventListener('click',e=>{e.preventDefault();if(CURRENT_USER){location.hash='cuenta';return;}openRoleModal();});});
