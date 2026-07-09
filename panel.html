@@ -93,6 +93,7 @@ tr:last-child td{border-bottom:none}
     <div class="actions">
       <span class="updated" id="updated"></span>
       <button class="btn btn--ghost btn--sm" id="refreshBtn">Actualizar</button>
+      <button class="btn btn--ghost btn--sm" id="resetBtn" style="border-color:var(--grano);color:var(--grano)">Reiniciar contadores</button>
       <button class="btn btn--ghost btn--sm" id="logoutBtn">Salir</button>
     </div>
   </div>
@@ -100,12 +101,13 @@ tr:last-child td{border-bottom:none}
   <div id="dashLoading" class="loading">Cargando datos de operación…</div>
 
   <div id="dash" style="display:none">
-    <h2 class="sec">Resumen de operación</h2>
+    <h2 class="sec">Resumen de operación <span style="text-transform:none;font-weight:400;color:var(--muted);font-size:12px" id="cutoffInfo"></span></h2>
     <div class="kpis" id="kpis"></div>
 
     <h2 class="sec">Precios del café en bolsa <span style="text-transform:none;font-weight:400;color:var(--muted);font-size:12px" id="cpUpdated"></span></h2>
     <div class="cprices" id="cprices"></div>
-    <p class="note">Referencias mundiales ICE Arabica (Nueva York) y Robusta (Londres) — las bolsas que fijan el precio del café. No existe una bolsa pública gratuita de café spot en Italia; estas son las referencias globales usadas por el mercado. Fuente gratuita (Stooq), puede tener retraso.</p>
+    <div id="priceCharts"></div>
+    <p class="note">Referencias mundiales ICE Arabica (Nueva York) y Coffee ETC (Londres) — las bolsas que fijan el precio del café — más el tipo de cambio spot USD/PEN. No existe una bolsa pública gratuita de café spot en Italia; la referencia europea (ETC) sigue de cerca el Arabica. Fuente gratuita (Yahoo Finance), puede tener minutos de retraso. Los gráficos muestran la tendencia del último mes; se guarda un dato nuevo cada día a las 9:00 a.m. (hora Perú).</p>
 
     <h2 class="sec">Pedidos y solicitudes por atender</h2>
     <div class="tabs" id="orderTabs"></div>
@@ -135,7 +137,7 @@ const loginEl = document.getElementById('login'), appEl = document.getElementByI
 function showApp(user){
   loginEl.style.display='none'; appEl.style.display='block';
   document.getElementById('who').textContent = 'Sesión: ' + user;
-  loadDashboard(); loadCoffee();
+  loadFx().then(loadDashboard); loadCoffee(); loadPriceHistory();
 }
 document.getElementById('loginForm').addEventListener('submit', e=>{
   e.preventDefault();
@@ -144,7 +146,15 @@ document.getElementById('loginForm').addEventListener('submit', e=>{
   else { document.getElementById('loginErr').style.display='block'; }
 });
 document.getElementById('logoutBtn').addEventListener('click', ()=>{ try{sessionStorage.removeItem(SKEY);}catch(e){} location.reload(); });
-document.getElementById('refreshBtn').addEventListener('click', ()=>{ loadDashboard(); loadCoffee(); });
+document.getElementById('refreshBtn').addEventListener('click', ()=>{ loadFx().then(loadDashboard); loadCoffee(); loadPriceHistory(); });
+document.getElementById('resetBtn').addEventListener('click', async ()=>{
+  if(!confirm('Esto NO borra ningún dato de tus hojas de Google Sheets: solo hace que los indicadores de Resumen de operación cuenten pedidos, cotizaciones, muestras y cuentas nuevas a partir de este momento. El historial completo sigue disponible en el Sheet.\n\n¿Confirmas reiniciar los contadores desde ahora?')) return;
+  try{
+    const r=await fetch(ENDPOINT+'?action=resetdash&token='+encodeURIComponent(ADMIN_TOKEN)+'&t='+Date.now());
+    const d=await r.json();
+    if(d.ok){ loadDashboard(); } else { alert('Error: '+(d.error||'?')); }
+  }catch(e){ alert('Error de red'); }
+});
 
 /* ====== HELPERS ====== */
 function fmtDate(v){ if(!v) return ''; const d=new Date(v); return isNaN(d)?String(v):d.toLocaleDateString('es-PE'); }
@@ -163,6 +173,7 @@ async function loadDashboard(){
     if(data.error) throw new Error(data.error);
     DASH = data;
     renderKpis(); renderOrders(); renderUsers(); renderPrices();
+    document.getElementById('cutoffInfo').textContent = data.cutoff ? '· contando desde ' + new Date(data.cutoff).toLocaleString('es-PE') : '· contando desde el inicio (sin reinicio aún)';
     document.getElementById('updated').textContent = 'Actualizado ' + new Date(data.updated).toLocaleTimeString('es-PE');
     document.getElementById('dashLoading').style.display='none';
     document.getElementById('dash').style.display='block';
@@ -235,6 +246,30 @@ function renderUsers(){
   document.getElementById('userTable').innerHTML=html;
 }
 
+/* ====== TIPO DE CAMBIO (conversión automática USD<->S/ y USD<->EUR) ====== */
+let FX=null;
+async function loadFx(){
+  try{ const r=await fetch(ENDPOINT+'?action=fxrates&t='+Date.now()); FX=await r.json(); }
+  catch(e){ FX=null; }
+}
+// Tienda (st*): par USD/S/, ancla=USD, S/=USD*usdpen. Marketplace (g*/r*): par USD/EUR, EUR=USD/eurusd.
+function currencyPairFor(key){
+  if(key.indexOf('st')===0) return {a:'usd', b:'soles', rate:FX&&FX.usdpen, aToB:(v,r)=>v*r, bToA:(v,r)=>v/r};
+  if(key.indexOf('g')===0 || key.indexOf('r')===0) return {a:'usd', b:'eur', rate:FX&&FX.eurusd, aToB:(v,r)=>v/r, bToA:(v,r)=>v*r};
+  return null;
+}
+function attachPriceSync(){
+  if(!FX) return;
+  document.querySelectorAll('#priceTable tr[data-pk]').forEach(tr=>{
+    const pair=currencyPairFor(tr.dataset.pk);
+    if(!pair || pair.rate==null) return;
+    const aInput=tr.querySelector(`[data-f="${pair.a}"]`), bInput=tr.querySelector(`[data-f="${pair.b}"]`);
+    if(!aInput||!bInput) return;
+    aInput.addEventListener('input', ()=>{ const v=parseFloat(aInput.value); if(!isNaN(v)) bInput.value=pair.aToB(v,pair.rate).toFixed(2); });
+    bInput.addEventListener('input', ()=>{ const v=parseFloat(bInput.value); if(!isNaN(v)) aInput.value=pair.bToA(v,pair.rate).toFixed(2); });
+  });
+}
+
 /* ====== PRICES EDITOR ====== */
 function renderPrices(){
   const pr=DASH.prices||{}; const keys=Object.keys(pr);
@@ -247,6 +282,12 @@ function renderPrices(){
     <td><button class="btn btn--sm savePrice">Guardar</button><span class="savemsg"></span></td></tr>`;}).join('');
   document.getElementById('priceTable').innerHTML=`<table><thead><tr><th>Producto</th><th>USD</th><th>EUR</th><th>S/</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
   document.querySelectorAll('.savePrice').forEach(btn=>btn.onclick=()=>savePrice(btn));
+  attachPriceSync();
+  let note=document.getElementById('fxNote');
+  if(!note){ note=document.createElement('p'); note.id='fxNote'; note.className='note'; document.getElementById('priceTable').after(note); }
+  note.textContent = FX
+    ? `Tipo de cambio de referencia: USD/PEN ${FX.usdpen? FX.usdpen.toFixed(3):'—'} · EUR/USD ${FX.eurusd? FX.eurusd.toFixed(4):'—'} (Yahoo Finance). Al escribir USD se calcula solo el S/ (Tienda) o el EUR (Marketplace), y viceversa; además se recalculan todos los días a las 9:00 a.m. (hora Perú).`
+    : 'No se pudo obtener el tipo de cambio ahora mismo; la conversión automática entre monedas no está disponible en este refresco (puedes seguir editando los campos manualmente).';
 }
 async function savePrice(btn){
   const tr=btn.closest('tr'); const key=tr.dataset.pk; const msg=tr.querySelector('.savemsg');
@@ -281,6 +322,41 @@ async function loadCoffee(){
 }
 /* refresco automático de precios de café cada 60s */
 setInterval(()=>{ if(appEl.style.display!=='none') loadCoffee(); }, 60000);
+
+/* ====== HISTÓRICO / GRÁFICOS DE LÍNEA (último mes) ====== */
+function svgLineChart(label, unit, vals, color){
+  const w=320, h=110, pad={l:4,r:4,t:10,b:18};
+  const clean=vals.filter(v=>v!=null && !isNaN(v));
+  if(clean.length<2){
+    return `<div class="cprice"><div class="lbl">${esc(label)}</div><div style="padding:16px 0;color:var(--muted);font-size:12.5px">Aún no hay suficiente histórico (vuelve mañana).</div></div>`;
+  }
+  const min=Math.min(...clean), max=Math.max(...clean), span=(max-min)||1, n=vals.length;
+  const x=i=>pad.l+(n<=1?0:(i/(n-1))*(w-pad.l-pad.r));
+  const y=v=>pad.t+(1-((v-min)/span))*(h-pad.t-pad.b);
+  let path='', started=false;
+  vals.forEach((v,i)=>{ if(v==null||isNaN(v)){started=false;return;} path+=(started?'L':'M')+x(i).toFixed(1)+','+y(v).toFixed(1)+' '; started=true; });
+  const first=clean[0], last=clean[clean.length-1];
+  const chgPct = first? ((last-first)/first*100) : 0;
+  const chgCls = chgPct>=0?'up':'down', chgTxt=(chgPct>=0?'▲ +':'▼ ')+Math.abs(chgPct).toFixed(1)+'% (mes)';
+  return `<div class="cprice">
+    <div class="lbl">${esc(label)}</div>
+    <svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" preserveAspectRatio="none" style="display:block;margin-top:6px">
+      <path d="${path.trim()}" fill="none" stroke="${color}" stroke-width="2"/>
+    </svg>
+    <div class="chg ${chgCls}">${chgTxt} <span style="color:var(--muted);font-weight:400">· ${esc(unit)}</span></div>
+  </div>`;
+}
+async function loadPriceHistory(){
+  try{
+    const r=await fetch(ENDPOINT+'?action=pricehistory&t='+Date.now());
+    const d=await r.json(); const items=(d.items||[]).slice(-31);
+    const html =
+      svgLineChart('Arabica ICE (KC=F) · último mes','US¢/lb', items.map(x=>x.arabica), 'var(--grano)') +
+      svgLineChart('Coffee ETC (COFF.L) · último mes','US$', items.map(x=>x.europa), 'var(--verde)') +
+      svgLineChart('PEN Spot (USD/PEN) · último mes','S/ por US$', items.map(x=>x.usdpen), 'var(--miel)');
+    document.getElementById('priceCharts').innerHTML = `<div class="cprices">${html}</div>`;
+  }catch(e){ document.getElementById('priceCharts').innerHTML=''; }
+}
 
 /* ====== AUTO-LOGIN si hay sesión ====== */
 (function(){ let u=null; try{u=sessionStorage.getItem(SKEY);}catch(e){} if(u&&USERS[u]) showApp(u); })();
