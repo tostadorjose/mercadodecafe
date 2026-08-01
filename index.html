@@ -1398,10 +1398,11 @@ const GREEN=[
   /* Resultado real de eudr-verificacion-gee.js (corrida 01-ago-2026):
      75.87 ha de bosque JRC al corte y CERO pérdida post-2020 sobre el polígono levantado. */
   defo:{bosque2020:75.87,serie:[{a:2021,ha:0},{a:2022,ha:0},{a:2023,ha:0},{a:2024,ha:0}],fuente:"JRC GFC2020 V2 + Hansen GFC 2024 v1.12"},
-  /* Serie satelital anual. Corre la sección 9 de eudr-verificacion-gee.js, descarga los PNG
-     de tu Drive, súbelos al repo en /sat/ y descomenta las urls. Mientras estén vacías la
-     ficha muestra "serie pendiente de exportar" en lugar de una imagen falsa. */
-  sat:[{a:2020,url:""},{a:2021,url:""},{a:2022,url:""},{a:2023,url:""},{a:2024,url:""},{a:2025,url:""}]}];
+  /* Serie satelital anual generada con la sección 9 de eudr-verificacion-gee.js
+     (Sentinel-2, color natural, contorno del predio en amarillo). Carpeta /sat/ en minúscula:
+     Netlify distingue mayúsculas y "Sat/" daría 404. */
+  sat:[{a:2020,url:"sat/g11-2020.png"},{a:2021,url:"sat/g11-2021.png"},{a:2022,url:"sat/g11-2022.png"},
+       {a:2023,url:"sat/g11-2023.png"},{a:2024,url:"sat/g11-2024.png"},{a:2025,url:"sat/g11-2025.png"}]}];
 /* Los 11 lotes anteriores usan PUNTO REFERENCIAL DE ZONA, no parcela levantada: su
    resultado satelital no constituye evidencia EUDR y siguen en estado "proceso". */
 GREEN.forEach(function(o){ if(!o.poligono) o.ref=true; });
