@@ -166,6 +166,20 @@ a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
 .eu-pend-bg{background:linear-gradient(90deg,#f2f1ed,#f8f7f4)}
 .trace-foot{margin:0 18px 14px;font-size:11.5px;color:var(--muted);font-family:"Space Mono"}
 .cd-quote-note{margin:10px 0 0;padding:12px 14px;background:var(--crema,#F3EDE0);border-left:3px solid var(--miel);border-radius:0 10px 10px 0;font-size:13px;color:var(--muted);line-height:1.6}
+/* ---- Visor de evolución satelital de la parcela ---- */
+.cd-sat{margin-top:16px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.sat-stage{position:relative;margin:12px 0 10px;border-radius:12px;overflow:hidden;background:#0e1a12;aspect-ratio:1/1}
+.sat-stage img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .25s}
+.sat-stage img.on{opacity:1}
+.sat-year{position:absolute;left:10px;bottom:10px;background:rgba(9,20,13,.82);color:#fff;font-family:"Space Mono";font-size:13px;font-weight:700;padding:5px 11px;border-radius:8px;letter-spacing:.04em;backdrop-filter:blur(2px)}
+.sat-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:22px;color:#AEBBA2;font-size:12.5px;line-height:1.6}
+.sat-ctrl{display:flex;align-items:center;gap:11px}
+.sat-play{flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:none;background:var(--selva);color:#fff;font-size:12px;line-height:1;display:grid;place-items:center;transition:background .15s}
+.sat-play:hover{background:var(--verde)}
+.sat-ctrl input[type=range]{flex:1;accent-color:var(--cereza,#C0432B);cursor:pointer}
+.sat-marks{display:flex;justify-content:space-between;margin:4px 2px 8px;font-family:"Space Mono";font-size:10px;color:var(--muted)}
+.sat-marks span{position:relative}
+.sat-marks span.on{color:var(--cereza,#C0432B);font-weight:700}
 /* ---- Serie anual de deforestación en la ficha del lote ---- */
 .cd-defo{margin-top:16px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}
 .defo-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 16px}
@@ -448,6 +462,11 @@ section[id]{scroll-margin-top:84px}
 
 /* coffee detail / quote / sample modals */
 .modal-box--wide{max-width:600px}
+/* Ficha de lote: ventana amplia a dos columnas (datos | trazabilidad y evidencia) */
+.modal-box--lot{max-width:1040px;padding:32px 34px}
+.lot-grid{display:grid;grid-template-columns:minmax(0,0.86fr) minmax(0,1.14fr);gap:26px;align-items:start}
+.lot-col{min-width:0}
+@media(max-width:900px){.modal-box--lot{max-width:640px;padding:26px 22px}.lot-grid{grid-template-columns:1fr;gap:18px}}
 .cd-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:6px}
 .cd-specs{list-style:none;margin:16px 0;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
 .cd-specs li{display:flex;flex-direction:column}
@@ -1112,10 +1131,12 @@ section[id]{scroll-margin-top:84px}
   </div>
 </div></div>
 
-<div class="modal" id="coffeeModal" aria-hidden="true"><div class="modal-box modal-box--wide" role="dialog" aria-modal="true">
+<div class="modal" id="coffeeModal" aria-hidden="true"><div class="modal-box modal-box--lot" role="dialog" aria-modal="true">
   <button class="modal-close" id="coffeeModalClose" aria-label="Cerrar">×</button>
   <div class="cd-head"><div><div class="eyebrow" id="cdRegion"></div><h3 id="cdName" style="font-size:26px"></h3></div><div class="tag" id="cdTag" style="margin-top:2px"></div></div>
   <div class="cd-quote-note" data-i18n="cd_quote_note">Precio por cotización según volumen, formato e Incoterm. Solicita tu cotización y te respondemos con el precio FOB o CIF cerrado.</div>
+  <div class="lot-grid">
+  <div class="lot-col">
   <ul class="cd-specs">
     <li><span class="k" data-i18n="alt_l">Altitud</span><span class="v" id="cdAlt"></span></li>
     <li><span class="k" data-i18n="proc_l">Proceso</span><span class="v" id="cdProc"></span></li>
@@ -1124,6 +1145,23 @@ section[id]{scroll-margin-top:84px}
   </ul>
   <div class="cd-block"><span class="k" data-i18n="cd_notes">Notas de cata</span><p id="cdNotes"></p></div>
   <div class="cd-block"><span class="k" data-i18n="cd_origin">Origen exacto</span><p id="cdOrigin"></p></div>
+  <!-- Evolución satelital de la parcela desde el corte EUDR -->
+  <div class="cd-sat" id="cdSat" style="display:none">
+    <div class="cdt-head"><span class="k" data-i18n="sat_t">Evolución satelital de la parcela</span></div>
+    <div class="sat-stage">
+      <img id="cdSatImg" alt="">
+      <div class="sat-year" id="cdSatYear"></div>
+      <div class="sat-empty" id="cdSatEmpty"></div>
+    </div>
+    <div class="sat-ctrl">
+      <button class="sat-play" id="cdSatPlay" type="button" aria-label="Reproducir">▶</button>
+      <input type="range" id="cdSatRange" min="0" max="0" value="0" aria-label="Año">
+    </div>
+    <div class="sat-marks" id="cdSatMarks"></div>
+    <p class="cd-trace-note" id="cdSatNote"></p>
+  </div>
+  </div>
+  <div class="lot-col">
   <div class="cd-trace" id="cdTrace">
     <div class="cdt-head"><span class="k" data-i18n="cd_trace_t">Trazabilidad y cumplimiento</span><span class="eudr-pill" id="cdEudr"></span></div>
     <ul class="cd-specs">
@@ -1141,6 +1179,8 @@ section[id]{scroll-margin-top:84px}
     <div class="defo-kpis" id="cdDefoKpis"></div>
     <div class="defo-chart" id="cdDefoChart"></div>
     <p class="cd-trace-note" id="cdDefoNote"></p>
+  </div>
+  </div>
   </div>
   <div class="cd-actions">
     <button class="btn" id="cdSampleBtn" data-i18n="cd_sample_btn">Solicitar muestra</button>
@@ -1249,6 +1289,11 @@ Object.assign(T,{
  geo_ref_note:{es:"Coordenada orientativa de la zona cafetalera, no de la parcela. El polígono real se levanta con el inspector interno antes de emitir el expediente.",en:"Indicative coordinate of the coffee-growing area, not of the plot. The actual polygon is surveyed with the internal inspector before the dossier is issued."},
  cd_geom:{es:"Geometría",en:"Geometry"},
  cd_gps_centro:{es:"Centroide del polígono",en:"Polygon centroid"},
+ sat_t:{es:"Evolución satelital de la parcela",en:"Satellite evolution of the plot"},
+ sat_alt:{es:"Imagen satelital de la parcela en",en:"Satellite image of the plot in"},
+ sat_corte:{es:"corte EUDR",en:"EUDR cut-off"},
+ sat_note:{es:"Composición anual Sentinel-2 (color natural) recortada al polígono del predio. Permite comparar visualmente el estado de la parcela desde el corte del 31-dic-2020 hasta la última campaña.",en:"Annual Sentinel-2 composite (true colour) clipped to the plot polygon. Lets you visually compare the plot from the 31-Dec-2020 cut-off to the latest season."},
+ sat_empty:{es:"Serie satelital pendiente de exportar. Se genera desde Earth Engine (Export.image) y se publica aquí en cuanto esté disponible.",en:"Satellite series pending export. It is generated from Earth Engine (Export.image) and published here once available."},
  defo_t:{es:"Secuencia de deforestación desde 31-dic-2020",en:"Deforestation sequence since 31-Dec-2020"},
  defo_k1:{es:"Bosque al 31-dic-2020 (ha)",en:"Forest at 31-Dec-2020 (ha)"},
  defo_k2:{es:"Pérdida acumulada post-2020 (ha)",en:"Cumulative post-2020 loss (ha)"},
@@ -1352,7 +1397,11 @@ const GREEN=[
   poligono:true,vertices:13,
   /* Resultado real de eudr-verificacion-gee.js (corrida 01-ago-2026):
      75.87 ha de bosque JRC al corte y CERO pérdida post-2020 sobre el polígono levantado. */
-  defo:{bosque2020:75.87,serie:[{a:2021,ha:0},{a:2022,ha:0},{a:2023,ha:0},{a:2024,ha:0}],fuente:"JRC GFC2020 V2 + Hansen GFC 2024 v1.12"}}];
+  defo:{bosque2020:75.87,serie:[{a:2021,ha:0},{a:2022,ha:0},{a:2023,ha:0},{a:2024,ha:0}],fuente:"JRC GFC2020 V2 + Hansen GFC 2024 v1.12"},
+  /* Serie satelital anual. Corre la sección 9 de eudr-verificacion-gee.js, descarga los PNG
+     de tu Drive, súbelos al repo en /sat/ y descomenta las urls. Mientras estén vacías la
+     ficha muestra "serie pendiente de exportar" en lugar de una imagen falsa. */
+  sat:[{a:2020,url:""},{a:2021,url:""},{a:2022,url:""},{a:2023,url:""},{a:2024,url:""},{a:2025,url:""}]}];
 /* Los 11 lotes anteriores usan PUNTO REFERENCIAL DE ZONA, no parcela levantada: su
    resultado satelital no constituye evidencia EUDR y siguen en estado "proceso". */
 GREEN.forEach(function(o){ if(!o.poligono) o.ref=true; });
@@ -1487,8 +1536,57 @@ function openCoffeeModal(id){const o=ORIGIN_BY_ID[id];if(!o)return;currentCoffee
   trace.style.display='block';
  }else{trace.style.display='none';}
  renderDefo(o);
+ renderSat(o);
  coffeeModal.classList.add('open');coffeeModal.setAttribute('aria-hidden','false');
 }
+/* ---- Evolución satelital: recorre las imágenes anuales del predio ---- */
+var SAT_TIMER=null,SAT_ANIOS=[],SAT_I=0;
+function satStop(){if(SAT_TIMER){clearInterval(SAT_TIMER);SAT_TIMER=null;}const b=document.getElementById('cdSatPlay');if(b)b.textContent='▶';}
+function satShow(i){
+ if(!SAT_ANIOS.length)return;
+ SAT_I=(i+SAT_ANIOS.length)%SAT_ANIOS.length;
+ const cur=SAT_ANIOS[SAT_I];
+ const img=document.getElementById('cdSatImg');
+ img.classList.remove('on');
+ img.src=cur.url;img.alt=t('sat_alt')+' '+cur.a;
+ img.onload=()=>img.classList.add('on');
+ document.getElementById('cdSatYear').textContent=cur.a+(cur.a===2020?' · '+t('sat_corte'):'');
+ document.getElementById('cdSatRange').value=SAT_I;
+ document.querySelectorAll('#cdSatMarks span').forEach((s,k)=>s.classList.toggle('on',k===SAT_I));
+}
+function renderSat(o){
+ const box=document.getElementById('cdSat');
+ if(!box)return;
+ satStop();
+ if(o.tab!=="verde"){box.style.display='none';return;}
+ SAT_ANIOS=(o.sat||[]).filter(s=>s&&s.url);SAT_I=0;
+ const empty=document.getElementById('cdSatEmpty'),img=document.getElementById('cdSatImg');
+ const marks=document.getElementById('cdSatMarks'),range=document.getElementById('cdSatRange');
+ document.getElementById('cdSatNote').textContent=t('sat_note');
+ if(!SAT_ANIOS.length){
+  /* Sin imágenes aún: se dice, no se simula. */
+  img.classList.remove('on');img.removeAttribute('src');
+  empty.textContent=t('sat_empty');empty.style.display='flex';
+  marks.innerHTML='';range.max=0;range.disabled=true;
+  document.getElementById('cdSatYear').textContent='';
+  box.style.display='block';return;
+ }
+ empty.style.display='none';range.disabled=false;range.max=SAT_ANIOS.length-1;
+ marks.innerHTML=SAT_ANIOS.map(s=>`<span>${s.a}</span>`).join('');
+ satShow(0);
+ box.style.display='block';
+}
+(function(){
+ const play=document.getElementById('cdSatPlay'),range=document.getElementById('cdSatRange');
+ if(!play||!range)return;
+ play.addEventListener('click',()=>{
+  if(SAT_TIMER){satStop();return;}
+  if(!SAT_ANIOS.length)return;
+  play.textContent='❚❚';
+  SAT_TIMER=setInterval(()=>satShow(SAT_I+1),1100);
+ });
+ range.addEventListener('input',e=>{satStop();satShow(parseInt(e.target.value,10)||0);});
+})();
 /* ---- Secuencia anual de deforestación (salida de eudr-verificacion-gee.js) ---- */
 function renderDefo(o){
  const box=document.getElementById('cdDefo');
@@ -1518,7 +1616,7 @@ function renderDefo(o){
  note.textContent=t('defo_src')+': '+(d.fuente||'—')+' · '+t('defo_unit');
  box.style.display='block';
 }
-function closeCoffeeModal(){coffeeModal.classList.remove('open');coffeeModal.setAttribute('aria-hidden','true');}
+function closeCoffeeModal(){satStop();coffeeModal.classList.remove('open');coffeeModal.setAttribute('aria-hidden','true');}
 coffeeModalClose.addEventListener('click',closeCoffeeModal);
 coffeeModal.addEventListener('click',e=>{if(e.target===coffeeModal)closeCoffeeModal();});
 cdSampleBtn.addEventListener('click',()=>{closeCoffeeModal();openSample(currentCoffeeId);});
