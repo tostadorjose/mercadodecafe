@@ -126,6 +126,10 @@ a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
 .eu-pend{background:#eceae4;color:#6b7566;border:1px solid #d8d3c7}
 .trace-strip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 18px;padding:11px 0 0;border-top:1px dashed var(--line)}
 .trace-gps{font-family:"Space Mono";font-size:11px;color:var(--muted);letter-spacing:.02em;cursor:help}
+/* Distintivo de geometría: polígono levantado (evidencia EUDR) vs punto referencial */
+.geo-badge{font-family:"Space Mono";font-size:10px;letter-spacing:.02em;padding:3px 8px;border-radius:6px;white-space:nowrap;cursor:help}
+.geo-poly{background:#e5f0e9;color:#256b41;border:1px solid #b7d8c4;font-weight:700}
+.geo-ref{background:transparent;color:var(--muted);border:1px dashed var(--line)}
 /* ---- Franja EUDR (diferenciador principal, bajo el hero) ---- */
 .eudr-band{background:linear-gradient(135deg,#12241a 0%,#1d3b28 55%,#24492f 100%);color:#fff;padding:52px 0;position:relative;overflow:hidden}
 .eudr-band::after{content:"";position:absolute;right:-90px;top:-90px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(139,197,63,.18),transparent 68%);pointer-events:none}
@@ -162,6 +166,23 @@ a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
 .eu-pend-bg{background:linear-gradient(90deg,#f2f1ed,#f8f7f4)}
 .trace-foot{margin:0 18px 14px;font-size:11.5px;color:var(--muted);font-family:"Space Mono"}
 .cd-quote-note{margin:10px 0 0;padding:12px 14px;background:var(--crema,#F3EDE0);border-left:3px solid var(--miel);border-radius:0 10px 10px 0;font-size:13px;color:var(--muted);line-height:1.6}
+/* ---- Serie anual de deforestación en la ficha del lote ---- */
+.cd-defo{margin-top:16px;padding:16px 18px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.defo-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 16px}
+.dk{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center}
+.dk-n{font-family:"Space Mono";font-weight:700;font-size:18px;color:var(--selva);line-height:1.2}
+.dk-l{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.3}
+.dk-ok .dk-n{color:#256b41}.dk-alert .dk-n{color:var(--cereza,#C0432B)}
+.defo-chart{display:flex;align-items:flex-end;gap:10px;min-height:132px;padding:8px 4px 0;border-bottom:1px solid var(--line)}
+.db{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.db-bar{width:100%;max-width:52px;height:92px;background:repeating-linear-gradient(0deg,transparent,transparent 22px,var(--line) 22px,var(--line) 23px);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden}
+.db-bar span{width:100%;border-radius:5px 5px 0 0;transition:height .4s ease}
+.db-loss{background:linear-gradient(180deg,#e06a52,var(--cereza,#C0432B))}
+.db-zero{background:#cfe3d5}
+.db-v{font-family:"Space Mono";font-size:11.5px;font-weight:700;color:var(--ink)}
+.db-y{font-family:"Space Mono";font-size:10.5px;color:var(--muted)}
+.defo-empty{width:100%;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;padding:26px 10px;background:var(--paper);border:1px dashed var(--line);border-radius:10px}
+@media(max-width:520px){.defo-kpis{grid-template-columns:1fr}.defo-chart{gap:6px}}
 .tag{display:inline-block;font-family:"Space Mono";font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--miel);color:#fff;margin-top:8px}
 
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
@@ -1106,12 +1127,20 @@ section[id]{scroll-margin-top:84px}
   <div class="cd-trace" id="cdTrace">
     <div class="cdt-head"><span class="k" data-i18n="cd_trace_t">Trazabilidad y cumplimiento</span><span class="eudr-pill" id="cdEudr"></span></div>
     <ul class="cd-specs">
-      <li><span class="k" data-i18n="cd_gps">Punto GPS de zona</span><span class="v mono" id="cdGps"></span></li>
+      <li><span class="k" id="cdGpsLbl" data-i18n="cd_gps">Punto GPS de zona</span><span class="v mono" id="cdGps"></span></li>
+      <li><span class="k" data-i18n="cd_geom">Geometría</span><span class="v" id="cdGeom"></span></li>
       <li><span class="k" data-i18n="cosecha_l">Ventana de cosecha</span><span class="v" id="cdCosecha"></span></li>
       <li><span class="k" data-i18n="cd_verif">Última verificación</span><span class="v" id="cdVerif"></span></li>
       <li><span class="k" data-i18n="cd_exped">Expediente</span><span class="v" data-i18n="cd_exped_v">PDF + GeoJSON con el pedido</span></li>
     </ul>
     <p class="cd-trace-note" data-i18n="cd_trace_note">El polígono o punto GPS de cada parcela se levanta en campo con el inspector interno (SIC) de la cooperativa y se cruza contra imágenes Sentinel con corte a diciembre 2020. El expediente completo se entrega con el embarque.</p>
+  </div>
+  <!-- Secuencia anual de deforestación desde el corte EUDR (31-dic-2020) -->
+  <div class="cd-defo" id="cdDefo" style="display:none">
+    <div class="cdt-head"><span class="k" data-i18n="defo_t">Secuencia de deforestación desde 31-dic-2020</span></div>
+    <div class="defo-kpis" id="cdDefoKpis"></div>
+    <div class="defo-chart" id="cdDefoChart"></div>
+    <p class="cd-trace-note" id="cdDefoNote"></p>
   </div>
   <div class="cd-actions">
     <button class="btn" id="cdSampleBtn" data-i18n="cd_sample_btn">Solicitar muestra</button>
@@ -1212,6 +1241,21 @@ Object.assign(T,{
  tz_eyebrow:{es:"01 — Trazabilidad verificada · EUDR",en:"01 — Verified traceability · EUDR"},
  mk_eyebrow:{es:"02 — Catálogo de lotes trazables",en:"02 — Traceable lot catalogue"},
  hw_eyebrow:{es:"03 — Cómo compras",en:"03 — How you buy"},
+ cd_notes_pend:{es:"Perfil de taza pendiente de análisis sensorial. Solicita una muestra y te enviamos la ficha de cata firmada por el catador.",en:"Cup profile pending sensory analysis. Request a sample and we send you the cupping sheet signed by the Q grader."},
+ geo_poly:{es:"Polígono levantado",en:"Surveyed polygon"},
+ geo_vert:{es:"vértices",en:"vertices"},
+ geo_ref:{es:"Punto referencial de zona",en:"Zone reference point"},
+ geo_poly_note:{es:"Parcela levantada en campo con sus vértices topográficos. Es la geometría que exige el EUDR y la que se cruza contra satélite.",en:"Plot surveyed in the field with its topographic vertices. This is the geometry EUDR requires and the one cross-checked against satellite."},
+ geo_ref_note:{es:"Coordenada orientativa de la zona cafetalera, no de la parcela. El polígono real se levanta con el inspector interno antes de emitir el expediente.",en:"Indicative coordinate of the coffee-growing area, not of the plot. The actual polygon is surveyed with the internal inspector before the dossier is issued."},
+ cd_geom:{es:"Geometría",en:"Geometry"},
+ cd_gps_centro:{es:"Centroide del polígono",en:"Polygon centroid"},
+ defo_t:{es:"Secuencia de deforestación desde 31-dic-2020",en:"Deforestation sequence since 31-Dec-2020"},
+ defo_k1:{es:"Bosque al 31-dic-2020 (ha)",en:"Forest at 31-Dec-2020 (ha)"},
+ defo_k2:{es:"Pérdida acumulada post-2020 (ha)",en:"Cumulative post-2020 loss (ha)"},
+ defo_k3:{es:"% del bosque 2020 perdido",en:"% of 2020 forest lost"},
+ defo_src:{es:"Fuente",en:"Source"},
+ defo_unit:{es:"hectáreas de pérdida de cobertura arbórea por año",en:"hectares of tree-cover loss per year"},
+ defo_empty:{es:"Análisis satelital en proceso. La serie anual se publica aquí en cuanto se corre la verificación sobre el polígono levantado en campo.",en:"Satellite analysis in progress. The annual series is published here as soon as verification runs on the field-surveyed polygon."},
  eb_tag:{es:"Reglamento UE 2023/1115 · EUDR",en:"EU Regulation 2023/1115 · EUDR"},
  eb_h2:{es:"Cada lote sale con su prueba de no deforestación",en:"Every lot ships with its deforestation-free evidence"},
  eb_p:{es:"Desde que el EUDR entra en vigor, el importador europeo responde por el origen de su café. Nosotros entregamos la evidencia hecha: punto GPS de la parcela, cruce satelital contra la cobertura forestal con corte a diciembre 2020 y expediente en PDF + GeoJSON para tu declaración de diligencia debida.",en:"Under EUDR, the European importer is accountable for the origin of its coffee. We hand over the evidence ready-made: plot GPS point, satellite cross-check against forest cover with a December 2020 cut-off, and a PDF + GeoJSON dossier for your due diligence statement."},
@@ -1300,10 +1344,18 @@ const GREEN=[
  {region:"Junín",name:"Junín",alt:"1.200–1.800",proc:"Lavado",v:"Catimor · Caturra",score:84,usd:485,eur:420,c:"#5C8A24",gps:"-11.0550, -75.3390",cosecha:"Abril – Agosto",eudr:"proceso",verif:""},
  {region:"San Martín",name:"Alto Mayo",alt:"1.100–1.500",proc:"Lavado",v:"Caturra · Catimor",score:84,usd:495,eur:430,c:"#D9752E",gps:"-5.9000, -77.3200",cosecha:"Abril – Septiembre",eudr:"proceso",verif:""},
  {region:"San Martín",name:"Moyobamba",alt:"1.200–1.700",proc:"Lavado",v:"Catimor · Caturra",score:84,usd:500,eur:435,c:"#D9752E",gps:"-6.0340, -76.9720",cosecha:"Abril – Septiembre",eudr:"proceso",verif:""},
- /* ⚠️ FUNDO ISCOZACÍN — coordenada real tomada del fundo propio (Palcazú, Oxapampa, Pasco).
-    Palcazú está a ~300–450 msnm, por debajo del rango de arábica de especialidad: CONFIRMAR
-    altitud real de la parcela, variedad, proceso, puntaje SCA y hectáreas antes de publicar. */
- {region:"Pasco",name:"Fundo Iscozacín",alt:"300–450",proc:"Lavado",v:"Por confirmar",score:null,usd:0,eur:0,c:"#3E7C59",gps:"-10.3833, -75.2167",cosecha:"Mayo – Septiembre",eudr:"proceso",verif:"",ha:"Por confirmar",propio:true}];
+ /* FUNDO ISCOZACÍN — polígono levantado en campo (13 vértices, UTM 18S / EPSG:32718).
+    Área calculada por shoelace: 75.83 ha. Centroide WGS84: -10.092891, -75.278213.
+    ⚠️ Palcazú está a ~300–450 msnm: CONFIRMAR altitud real, variedad, proceso y puntaje SCA. */
+ {region:"Pasco",name:"Fundo Iscozacín",alt:"300–450",proc:"Lavado",v:"Por confirmar",score:null,usd:0,eur:0,c:"#3E7C59",
+  gps:"-10.092891, -75.278213",cosecha:"Mayo – Septiembre",eudr:"ok",verif:"2026-08-01",ha:"75.83 ha",propio:true,
+  poligono:true,vertices:13,
+  /* Resultado real de eudr-verificacion-gee.js (corrida 01-ago-2026):
+     75.87 ha de bosque JRC al corte y CERO pérdida post-2020 sobre el polígono levantado. */
+  defo:{bosque2020:75.87,serie:[{a:2021,ha:0},{a:2022,ha:0},{a:2023,ha:0},{a:2024,ha:0}],fuente:"JRC GFC2020 V2 + Hansen GFC 2024 v1.12"}}];
+/* Los 11 lotes anteriores usan PUNTO REFERENCIAL DE ZONA, no parcela levantada: su
+   resultado satelital no constituye evidencia EUDR y siguen en estado "proceso". */
+GREEN.forEach(function(o){ if(!o.poligono) o.ref=true; });
 const ROAST=[
  {region:"Pasco",name:"Villa Rica",alt:"1.400–1.900",proc:"Lavado",v:"Tueste medio",score:86,usd:100,c:"#E8A73D"},
  {region:"Cajamarca",name:"San Ignacio",alt:"1.500–1.900",proc:"Lavado",v:"Tueste medio",score:86,usd:100,c:"#C0432B"},
@@ -1335,9 +1387,13 @@ function eudrInfo(o){
 function originCard(o,tab){
  const eu=eudrInfo(o);
  /* La cabecera de trazabilidad es lo primero que se lee: el estado EUDR manda. */
+ /* Distinguir parcela levantada de punto referencial: solo la primera es evidencia EUDR. */
+ const geo=o.poligono
+   ? `<span class="geo-badge geo-poly" title="${t('geo_poly_note')}">▣ ${t('geo_poly')} · ${o.vertices} ${t('geo_vert')}</span>`
+   : `<span class="geo-badge geo-ref" title="${t('geo_ref_note')}">◎ ${t('geo_ref')}</span>`;
  const traza=tab==="verde"?`<div class="trace-head ${eu.cls}-bg">
    <span class="eudr-pill ${eu.cls}">${eu.label}</span>
-   ${o.gps?`<span class="trace-gps" title="${t('gps_note')}">◎ ${o.gps}</span>`:''}
+   ${geo}
   </div>`:'';
  const verif=(tab==="verde"&&o.eudr==='ok'&&o.verif)?`<div class="trace-foot">${t('cd_verif')}: <b>${o.verif}</b></div>`:'';
  return `<article class="origin" data-name="${o.id}"><div class="top"><div><div class="region">${o.region}</div><h3>${o.name}</h3><span class="tag">${tab==="verde"?t('tag_green'):t('tag_roast')}</span></div><div class="swatch" style="background:${o.c}">${beanSVG('#fff')}</div></div>
@@ -1411,7 +1467,9 @@ let currentCoffeeId=null;
 function openCoffeeModal(id){const o=ORIGIN_BY_ID[id];if(!o)return;currentCoffeeId=id;
  cdRegion.textContent=o.region;cdName.textContent=o.name;cdTag.textContent=o.tab==="verde"?t('tag_green'):t('tag_roast');
  cdAlt.textContent=o.alt+' '+t('msnm');cdProc.textContent=o.proc;cdVar.textContent=o.v;cdScore.textContent=o.score;
- cdNotes.textContent=t('pf_'+(REGION_SLUG[o.region]||''));
+ /* Perfil de taza: si el lote trae el suyo se usa; si no, el perfil de la región.
+    Nunca se hereda una D.O. ajena a lotes sin perfil confirmado. */
+ cdNotes.textContent=o.notas||(o.v==='Por confirmar'?t('cd_notes_pend'):t('pf_'+(REGION_SLUG[o.region]||'')));
  cdOrigin.textContent=o.name+', '+o.region+', Perú';
  /* bloque de trazabilidad (solo aplica a grano verde de exportación) */
  const trace=document.getElementById('cdTrace');
@@ -1420,11 +1478,45 @@ function openCoffeeModal(id){const o=ORIGIN_BY_ID[id];if(!o)return;currentCoffee
   const pill=document.getElementById('cdEudr');
   pill.textContent=eu.label;pill.className='eudr-pill '+eu.cls;
   document.getElementById('cdGps').textContent=o.gps||'—';
+  document.getElementById('cdGpsLbl').textContent=o.poligono?t('cd_gps_centro'):t('cd_gps');
+  document.getElementById('cdGeom').textContent=o.poligono
+   ? t('geo_poly')+' · '+o.vertices+' '+t('geo_vert')+(o.ha?' · '+o.ha:'')
+   : t('geo_ref');
   document.getElementById('cdCosecha').textContent=o.cosecha||'—';
   document.getElementById('cdVerif').textContent=o.verif||t('cd_verif_proc');
   trace.style.display='block';
  }else{trace.style.display='none';}
+ renderDefo(o);
  coffeeModal.classList.add('open');coffeeModal.setAttribute('aria-hidden','false');
+}
+/* ---- Secuencia anual de deforestación (salida de eudr-verificacion-gee.js) ---- */
+function renderDefo(o){
+ const box=document.getElementById('cdDefo');
+ if(!box)return;
+ if(o.tab!=="verde"||!o.defo){box.style.display='none';return;}
+ const d=o.defo,serie=d.serie||[];
+ const hayDato=serie.some(s=>s.ha!==null&&s.ha!==undefined);
+ const kpis=document.getElementById('cdDefoKpis'),chart=document.getElementById('cdDefoChart'),note=document.getElementById('cdDefoNote');
+ if(!hayDato){
+  /* Sin resultados aún: se muestra el estado real, nunca un número inventado. */
+  kpis.innerHTML='';
+  chart.innerHTML=`<div class="defo-empty">${t('defo_empty')}</div>`;
+  note.textContent=t('defo_src')+': '+(d.fuente||'—');
+  box.style.display='block';return;
+ }
+ const total=serie.reduce((a,s)=>a+(s.ha||0),0);
+ const pct=(d.bosque2020&&d.bosque2020>0)?(total/d.bosque2020*100):null;
+ kpis.innerHTML=
+  `<div class="dk"><div class="dk-n">${d.bosque2020!=null?d.bosque2020.toFixed(2):'—'}</div><div class="dk-l">${t('defo_k1')}</div></div>`+
+  `<div class="dk ${total>0.05?'dk-alert':'dk-ok'}"><div class="dk-n">${total.toFixed(3)}</div><div class="dk-l">${t('defo_k2')}</div></div>`+
+  `<div class="dk"><div class="dk-n">${pct!=null?pct.toFixed(2)+'%':'—'}</div><div class="dk-l">${t('defo_k3')}</div></div>`;
+ const max=Math.max.apply(null,serie.map(s=>s.ha||0))||1;
+ chart.innerHTML=serie.map(s=>{
+  const v=s.ha||0,h=Math.max(2,Math.round(v/max*100));
+  return `<div class="db"><div class="db-bar"><span style="height:${h}%" class="${v>0?'db-loss':'db-zero'}"></span></div><div class="db-v">${v.toFixed(2)}</div><div class="db-y">${s.a}</div></div>`;
+ }).join('');
+ note.textContent=t('defo_src')+': '+(d.fuente||'—')+' · '+t('defo_unit');
+ box.style.display='block';
 }
 function closeCoffeeModal(){coffeeModal.classList.remove('open');coffeeModal.setAttribute('aria-hidden','true');}
 coffeeModalClose.addEventListener('click',closeCoffeeModal);
